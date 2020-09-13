@@ -1,0 +1,1821 @@
+{
+  "options": {
+    "go_package": ".;acproto"
+  },
+  "nested": {
+    "AcFunDanmu": {
+      "nested": {
+        "AccessPoint": {
+          "fields": {
+            "addressType": {
+              "type": "AddressType",
+              "id": 1
+            },
+            "port": {
+              "type": "uint32",
+              "id": 2
+            },
+            "ipV4": {
+              "type": "fixed32",
+              "id": 3
+            },
+            "ipV6": {
+              "type": "bytes",
+              "id": 4
+            },
+            "domain": {
+              "type": "string",
+              "id": 5
+            }
+          },
+          "nested": {
+            "AddressType": {
+              "values": {
+                "kIPV4": 0,
+                "kIPV6": 1,
+                "kDomain": 2
+              }
+            }
+          }
+        },
+        "AccessPointsConfig": {
+          "fields": {
+            "optimalAps": {
+              "rule": "repeated",
+              "type": "AccessPoint",
+              "id": 1
+            },
+            "backupAps": {
+              "rule": "repeated",
+              "type": "AccessPoint",
+              "id": 2
+            },
+            "availablePorts": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 3
+            },
+            "foreceLastConnectedAp": {
+              "type": "AccessPoint",
+              "id": 4
+            }
+          }
+        },
+        "AppInfo": {
+          "fields": {
+            "appName": {
+              "type": "string",
+              "id": 1
+            },
+            "appVersion": {
+              "type": "string",
+              "id": 2
+            },
+            "appChannel": {
+              "type": "string",
+              "id": 3
+            },
+            "sdkVersion": {
+              "type": "string",
+              "id": 4
+            },
+            "extensionInfo": {
+              "keyType": "string",
+              "type": "string",
+              "id": 11
+            }
+          }
+        },
+        "DeviceInfo": {
+          "fields": {
+            "platformType": {
+              "type": "PlatformType",
+              "id": 1
+            },
+            "osVersion": {
+              "type": "string",
+              "id": 2
+            },
+            "deviceModel": {
+              "type": "string",
+              "id": 3
+            },
+            "imeiMd5": {
+              "type": "bytes",
+              "id": 4
+            },
+            "deviceId": {
+              "type": "string",
+              "id": 5
+            },
+            "softDid": {
+              "type": "string",
+              "id": 6
+            },
+            "kwaiDid": {
+              "type": "string",
+              "id": 7
+            },
+            "manufacturer": {
+              "type": "string",
+              "id": 8
+            },
+            "deviceName": {
+              "type": "string",
+              "id": 9
+            }
+          },
+          "nested": {
+            "PlatformType": {
+              "values": {
+                "kInvalid": 0,
+                "kAndroid": 1,
+                "kiOS": 2,
+                "kWindows": 3,
+                "WECHAT_ANDROID": 4,
+                "WECHAT_IOS": 5,
+                "H5": 6,
+                "H5_ANDROID": 7,
+                "H5_IOS": 8,
+                "H5_WINDOWS": 9,
+                "H5_MAC": 10,
+                "kPlatformNum": 11
+              }
+            }
+          }
+        },
+        "DownstreamPayload": {
+          "fields": {
+            "command": {
+              "type": "string",
+              "id": 1
+            },
+            "seqId": {
+              "type": "int64",
+              "id": 2
+            },
+            "errorCode": {
+              "type": "int32",
+              "id": 3
+            },
+            "payloadData": {
+              "type": "bytes",
+              "id": 4
+            },
+            "errorMsg": {
+              "type": "string",
+              "id": 5
+            },
+            "errorData": {
+              "type": "bytes",
+              "id": 6
+            },
+            "subBiz": {
+              "type": "string",
+              "id": 7
+            }
+          }
+        },
+        "EnvInfo": {
+          "fields": {
+            "networkType": {
+              "type": "NetworkType",
+              "id": 1
+            },
+            "appName": {
+              "type": "bytes",
+              "id": 2
+            }
+          },
+          "nested": {
+            "NetworkType": {
+              "values": {
+                "kInvalid": 0,
+                "kWIFI": 1,
+                "kCellular": 2
+              }
+            }
+          }
+        },
+        "ErrorMessage": {
+          "fields": {
+            "localeMessages": {
+              "rule": "repeated",
+              "type": "LocaleMessage",
+              "id": 1
+            }
+          }
+        },
+        "LocaleMessage": {
+          "fields": {
+            "locale": {
+              "type": "string",
+              "id": 1
+            },
+            "errorMessage": {
+              "keyType": "int32",
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "FrontendInfo": {
+          "fields": {
+            "ip": {
+              "type": "string",
+              "id": 1
+            },
+            "port": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "I18nCopyWriting": {
+          "fields": {
+            "formatKey": {
+              "type": "string",
+              "id": 1
+            },
+            "formatParam": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "KeepAliveRequest": {
+          "fields": {
+            "presenceStatus": {
+              "type": "RegisterRequest.PresenceStatus",
+              "id": 1
+            },
+            "appActiveStatus": {
+              "type": "RegisterRequest.ActiveStatus",
+              "id": 2
+            },
+            "pushServiceToken": {
+              "type": "PushServiceToken",
+              "id": 3
+            },
+            "pushServiceTokenList": {
+              "rule": "repeated",
+              "type": "PushServiceToken",
+              "id": 4
+            },
+            "keepaliveIntervalSec": {
+              "type": "int32",
+              "id": 5
+            }
+          }
+        },
+        "KeepAliveResponse": {
+          "fields": {
+            "accessPointsConfig": {
+              "type": "AccessPointsConfig",
+              "id": 1
+            },
+            "serverMsec": {
+              "type": "int64",
+              "id": 2
+            },
+            "accessPointsConfigIpv6": {
+              "type": "AccessPointsConfig",
+              "id": 3
+            }
+          }
+        },
+        "RegisterRequest": {
+          "fields": {
+            "appInfo": {
+              "type": "AppInfo",
+              "id": 1
+            },
+            "deviceInfo": {
+              "type": "DeviceInfo",
+              "id": 2
+            },
+            "envInfo": {
+              "type": "EnvInfo",
+              "id": 3
+            },
+            "presenceStatus": {
+              "type": "PresenceStatus",
+              "id": 4
+            },
+            "appActiveStatus": {
+              "type": "ActiveStatus",
+              "id": 5
+            },
+            "appCustomStatus": {
+              "type": "bytes",
+              "id": 6
+            },
+            "pushServiceToken": {
+              "type": "PushServiceToken",
+              "id": 7
+            },
+            "instanceId": {
+              "type": "int64",
+              "id": 8
+            },
+            "pushServiceTokenList": {
+              "rule": "repeated",
+              "type": "PushServiceToken",
+              "id": 9
+            },
+            "keepaliveIntervalSec": {
+              "type": "int32",
+              "id": 10
+            },
+            "ztCommonInfo": {
+              "type": "ZtCommonInfo",
+              "id": 11
+            }
+          },
+          "nested": {
+            "PresenceStatus": {
+              "values": {
+                "kPresenceOffline": 0,
+                "kPresenceOnline": 1
+              }
+            },
+            "ActiveStatus": {
+              "values": {
+                "kInvalid": 0,
+                "kAppInForeground": 1,
+                "kAppInBackground": 2
+              }
+            }
+          }
+        },
+        "RegisterResponse": {
+          "fields": {
+            "accessPointsConfig": {
+              "type": "AccessPointsConfig",
+              "id": 1
+            },
+            "sessKey": {
+              "type": "bytes",
+              "id": 2
+            },
+            "instanceId": {
+              "type": "int64",
+              "id": 3
+            },
+            "sdkOption": {
+              "type": "SdkOption",
+              "id": 4
+            },
+            "accessPointsCOnfigIpv6": {
+              "type": "AccessPointsConfig",
+              "id": 5
+            }
+          }
+        },
+        "ZtCommonInfo": {
+          "fields": {
+            "kpn": {
+              "type": "string",
+              "id": 1
+            },
+            "kpf": {
+              "type": "string",
+              "id": 2
+            },
+            "subBiz": {
+              "type": "string",
+              "id": 3
+            },
+            "uid": {
+              "type": "int64",
+              "id": 4
+            },
+            "did": {
+              "type": "string",
+              "id": 5
+            },
+            "clientIp": {
+              "type": "int64",
+              "id": 6
+            },
+            "appVer": {
+              "type": "string",
+              "id": 7
+            },
+            "ver": {
+              "type": "string",
+              "id": 8
+            },
+            "lat": {
+              "type": "string",
+              "id": 9
+            },
+            "lon": {
+              "type": "string",
+              "id": 10
+            },
+            "mod": {
+              "type": "string",
+              "id": 11
+            },
+            "net": {
+              "type": "string",
+              "id": 12
+            },
+            "sys": {
+              "type": "string",
+              "id": 13
+            },
+            "c": {
+              "type": "string",
+              "id": 14
+            },
+            "language": {
+              "type": "string",
+              "id": 15
+            },
+            "countryCode": {
+              "type": "string",
+              "id": 16
+            }
+          }
+        },
+        "PushServiceToken": {
+          "fields": {
+            "pushType": {
+              "type": "PushType",
+              "id": 1
+            },
+            "token": {
+              "type": "bytes",
+              "id": 2
+            },
+            "isPassThrough": {
+              "type": "bool",
+              "id": 3
+            }
+          },
+          "nested": {
+            "PushType": {
+              "values": {
+                "kPushTypeInvalid": 0,
+                "kPushTypeAPNS": 1,
+                "kPushTypeXmPush": 2,
+                "kPushTypeJgPush": 3,
+                "kPushTypeGtPUsh": 4,
+                "kPushTypeOpPush": 5,
+                "kPushTYpeVvPush": 6,
+                "kPushTypeHwPush": 7,
+                "kPushTYpeFcm": 8
+              }
+            }
+          }
+        },
+        "SdkOption": {
+          "fields": {
+            "reportIntervalSeconds": {
+              "type": "int32",
+              "id": 1
+            },
+            "reportSecurity": {
+              "type": "string",
+              "id": 2
+            },
+            "lz4CompressionThresholdBytes": {
+              "type": "int32",
+              "id": 3
+            },
+            "netCheckServers": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 4
+            }
+          }
+        },
+        "LinkErrorCode": {
+          "values": {
+            "SUCC": 0,
+            "BASIC_MIN": 10000,
+            "INTERNEL_ERROR": 10001,
+            "SERVICE_UNAVAILABLE": 10002,
+            "SERVICE_TIMEOUT": 10003,
+            "INVALID_TOKEN": 10004,
+            "REG_ENCYRPT_WITHOUT_TOKEN": 10005,
+            "PARSE_PB_HDR_FAIL": 10006,
+            "PARSE_PB_PLD_FAIL": 10007,
+            "PARSE_PB_FAIL": 10008,
+            "DECODED_LEN_FAIL": 10009,
+            "INVALID_KEY": 10010,
+            "ENCRYPT_FAIL": 10011,
+            "DECRYPT_FAIL": 10012,
+            "INVALID_TAG": 10013,
+            "INVALID_VER": 10014,
+            "INVALID_COMPRESS_TYPE": 10016,
+            "INVALID_ENCRYPT_TYPE": 10017,
+            "NOT_REGISTER": 10018,
+            "USER_NOT_ONLINE": 10019,
+            "INVALID_COMMAND": 10020,
+            "PUSH_UNREGISTER_ERROR": 10021,
+            "INVALID_SID": 10022,
+            "INVALID_instanceId": 10023,
+            "CLIENT_LOCALE_NOT_MATCH": 10024,
+            "INVALID_TOKEN_PASSWORD_CHANGED": 10025,
+            "INVALID_TOKEN_TOKEN_EXPIRED": 10026,
+            "INVALID_TOKEN_TOKEN_VALUE_ERROR": 10027,
+            "INVALID_TOKEN_LOGIN_ON_OTHER_DEVICE": 10028,
+            "FORCE_RECONNECT": 10029,
+            "CLIENT_TIMEOUT": 10030,
+            "INVALID_ARGUMENT": 10031,
+            "INVALID_FORMAT_TOKEN": 10032,
+            "EMPTY_PAYLOAD": 10033,
+            "COMPRESS_FAIL": 10034,
+            "DECOMPRESS_FAIL": 10035,
+            "OUT_OF_ORDER": 10036,
+            "BASIC_MAX": 19999
+          }
+        },
+        "PacketHeader": {
+          "fields": {
+            "appId": {
+              "type": "int32",
+              "id": 1
+            },
+            "uid": {
+              "type": "int64",
+              "id": 2
+            },
+            "instanceId": {
+              "type": "int64",
+              "id": 3
+            },
+            "flags": {
+              "type": "uint32",
+              "id": 5
+            },
+            "encodingType": {
+              "type": "EncodingType",
+              "id": 6
+            },
+            "decodedPayloadLen": {
+              "type": "uint32",
+              "id": 7
+            },
+            "encryptionMode": {
+              "type": "EncryptionMode",
+              "id": 8
+            },
+            "tokenInfo": {
+              "type": "TokenInfo",
+              "id": 9
+            },
+            "seqId": {
+              "type": "int64",
+              "id": 10
+            },
+            "features": {
+              "rule": "repeated",
+              "type": "Feature",
+              "id": 11
+            },
+            "kpn": {
+              "type": "string",
+              "id": 12
+            }
+          },
+          "nested": {
+            "Flags": {
+              "options": {
+                "allow_alias": true
+              },
+              "values": {
+                "kDirUpstream": 0,
+                "kDirDownstream": 1,
+                "kDirMask": 1
+              }
+            },
+            "EncodingType": {
+              "values": {
+                "kEncodingNone": 0,
+                "kEncodingLz4": 1
+              }
+            },
+            "EncryptionMode": {
+              "values": {
+                "kEncryptionNone": 0,
+                "kEncryptionServiceToken": 1,
+                "kEncryptionSessionKey": 2
+              }
+            },
+            "Feature": {
+              "values": {
+                "kReserve": 0,
+                "kCompressLz4": 1
+              }
+            }
+          }
+        },
+        "TokenInfo": {
+          "fields": {
+            "tokenType": {
+              "type": "TokenType",
+              "id": 1
+            },
+            "token": {
+              "type": "bytes",
+              "id": 2
+            }
+          },
+          "nested": {
+            "TokenType": {
+              "values": {
+                "kInvalid": 0,
+                "kServiceToken": 1
+              }
+            }
+          }
+        },
+        "PingRequest": {
+          "fields": {
+            "pingType": {
+              "type": "PingType",
+              "id": 1
+            },
+            "pingRound": {
+              "type": "uint32",
+              "id": 2
+            }
+          },
+          "nested": {
+            "PingType": {
+              "values": {
+                "kInvalid": 0,
+                "kPriorRegister": 1,
+                "kPostRegister": 2
+              }
+            }
+          }
+        },
+        "PingResponse": {
+          "fields": {
+            "serverTimestamp": {
+              "type": "sfixed32",
+              "id": 1
+            },
+            "clientIp": {
+              "type": "fixed32",
+              "id": 2
+            },
+            "redirectIp": {
+              "type": "fixed32",
+              "id": 3
+            },
+            "redirectPort": {
+              "type": "uint32",
+              "id": 4
+            }
+          }
+        },
+        "RequestBasicInfo": {
+          "fields": {
+            "clientType": {
+              "type": "DeviceInfo.PlatformType",
+              "id": 1
+            },
+            "deviceId": {
+              "type": "string",
+              "id": 2
+            },
+            "clientIp": {
+              "type": "string",
+              "id": 3
+            },
+            "appVersion": {
+              "type": "string",
+              "id": 4
+            },
+            "channel": {
+              "type": "string",
+              "id": 5
+            },
+            "appInfo": {
+              "type": "AppInfo",
+              "id": 6
+            },
+            "deviceInfo": {
+              "type": "DeviceInfo",
+              "id": 7
+            },
+            "envInfo": {
+              "type": "EnvInfo",
+              "id": 8
+            },
+            "clientPort": {
+              "type": "int32",
+              "id": 9
+            },
+            "location": {
+              "type": "string",
+              "id": 10
+            },
+            "kpf": {
+              "type": "string",
+              "id": 11
+            }
+          }
+        },
+        "SettingInfo": {
+          "fields": {
+            "locale": {
+              "type": "string",
+              "id": 1
+            },
+            "timezone": {
+              "type": "sint32",
+              "id": 2
+            }
+          }
+        },
+        "SharePlatform": {
+          "values": {
+            "kSharePlatformInvalid": 0,
+            "kSharePlatformWechat": 1,
+            "kSharePlatformWechatMoments": 2,
+            "kSharePlatformQQ": 3,
+            "kSharePlatformQzone": 4,
+            "kSharePlatformWeibo": 5,
+            "kSharePlatformKuaishou": 6,
+            "kSharePlatformFacebook": 7,
+            "kSharePlatformTwitter": 8,
+            "kSharePlatformGoogle": 9,
+            "kSharePlatformKakao": 10,
+            "kSharePlatformZalo": 11
+          }
+        },
+        "SyncCookie": {
+          "fields": {
+            "syncOffset": {
+              "type": "int64",
+              "id": 1
+            }
+          }
+        },
+        "UnregisterRequest": {
+          "fields": {}
+        },
+        "UnregisterResponse": {
+          "fields": {}
+        },
+        "UpstreamPayload": {
+          "fields": {
+            "command": {
+              "type": "string",
+              "id": 1
+            },
+            "seqId": {
+              "type": "int64",
+              "id": 2
+            },
+            "retryCount": {
+              "type": "uint32",
+              "id": 3
+            },
+            "payloadData": {
+              "type": "bytes",
+              "id": 4
+            },
+            "userInstance": {
+              "type": "UserInstance",
+              "id": 5
+            },
+            "errorCode": {
+              "type": "int32",
+              "id": 6
+            },
+            "settingInfo": {
+              "type": "SettingInfo",
+              "id": 7
+            },
+            "requestBasicInfo": {
+              "type": "RequestBasicInfo",
+              "id": 8
+            },
+            "subBiz": {
+              "type": "string",
+              "id": 9
+            },
+            "frontendInfo": {
+              "type": "FrontendInfo",
+              "id": 10
+            },
+            "kpn": {
+              "type": "string",
+              "id": 11
+            },
+            "anonymouseUser": {
+              "type": "bool",
+              "id": 12
+            }
+          }
+        },
+        "UserInstance": {
+          "fields": {
+            "user": {
+              "type": "User",
+              "id": 1
+            },
+            "instanceId": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "User": {
+          "fields": {
+            "appId": {
+              "type": "int32",
+              "id": 1
+            },
+            "uid": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "AcFunUserInfo": {
+          "fields": {
+            "userId": {
+              "type": "int64",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "AcfunActionSignalThrowBanana": {
+          "fields": {
+            "visitor": {
+              "type": "AcFunUserInfo",
+              "id": 1
+            },
+            "count": {
+              "type": "int32",
+              "id": 2
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 3
+            }
+          }
+        },
+        "AcfunStateSignalDisplayInfo": {
+          "fields": {
+            "bananaCount": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "AuthorChatPlayerInfo": {
+          "fields": {
+            "user": {
+              "type": "ZtLiveUserInfo",
+              "id": 1
+            },
+            "b": {
+              "type": "string",
+              "id": 2
+            },
+            "c": {
+              "type": "bool",
+              "id": 3
+            }
+          }
+        },
+        "ZtLiveUserInfo": {
+          "fields": {
+            "userId": {
+              "type": "int64",
+              "id": 1
+            },
+            "nickname": {
+              "type": "string",
+              "id": 2
+            },
+            "avatar": {
+              "rule": "repeated",
+              "type": "ImageCdnNode",
+              "id": 3
+            },
+            "badge": {
+              "type": "string",
+              "id": 4
+            },
+            "userIdentity": {
+              "type": "ZtLiveUserIdentity",
+              "id": 5
+            }
+          }
+        },
+        "ImageCdnNode": {
+          "fields": {
+            "cdn": {
+              "type": "string",
+              "id": 1
+            },
+            "url": {
+              "type": "string",
+              "id": 2
+            },
+            "urlPattern": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        },
+        "ZtLiveUserIdentity": {
+          "fields": {
+            "managerType": {
+              "type": "ManagerType",
+              "id": 1
+            }
+          },
+          "nested": {
+            "ManagerType": {
+              "values": {
+                "UNKNOWN_MANAGER_TYPE": 0,
+                "NORMAL": 1
+              }
+            }
+          }
+        },
+        "ChatMediaType": {
+          "values": {
+            "UNKNOWN": 0,
+            "AUDIO": 1,
+            "VIDEO": 2
+          }
+        },
+        "CommonActionSignalComment": {
+          "fields": {
+            "content": {
+              "type": "string",
+              "id": 1
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 2
+            },
+            "userInfo": {
+              "type": "ZtLiveUserInfo",
+              "id": 3
+            }
+          }
+        },
+        "CommonActionSignalGift": {
+          "fields": {
+            "user": {
+              "type": "ZtLiveUserInfo",
+              "id": 1
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 2
+            },
+            "giftId": {
+              "type": "int64",
+              "id": 3
+            },
+            "count": {
+              "type": "int32",
+              "id": 4
+            },
+            "combo": {
+              "type": "int32",
+              "id": 5
+            },
+            "value": {
+              "type": "int64",
+              "id": 6
+            },
+            "comboId": {
+              "type": "string",
+              "id": 7
+            },
+            "slotDisplayDurationMs": {
+              "type": "int64",
+              "id": 8
+            },
+            "expireDurationMs": {
+              "type": "int64",
+              "id": 9
+            },
+            "drawGiftInfo": {
+              "type": "ZtDrawGiftInfo",
+              "id": 10
+            }
+          }
+        },
+        "ZtDrawGiftInfo": {
+          "fields": {
+            "screenWidth": {
+              "type": "int64",
+              "id": 1
+            },
+            "screenHeight": {
+              "type": "int64",
+              "id": 2
+            },
+            "drawPoint": {
+              "rule": "repeated",
+              "type": "ZtDrawPoint",
+              "id": 3
+            }
+          },
+          "nested": {
+            "ZtDrawPoint": {
+              "fields": {
+                "marginLeft": {
+                  "type": "int64",
+                  "id": 1
+                },
+                "marginTop": {
+                  "type": "int64",
+                  "id": 2
+                },
+                "scaleRatio": {
+                  "type": "double",
+                  "id": 3
+                },
+                "handup": {
+                  "type": "bool",
+                  "id": 4
+                }
+              }
+            }
+          }
+        },
+        "CommonActionSignalLike": {
+          "fields": {
+            "userInfo": {
+              "type": "ZtLiveUserInfo",
+              "id": 1
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "CommonActionSignalRichText": {
+          "fields": {
+            "segments": {
+              "rule": "repeated",
+              "type": "RichTextSegment",
+              "id": 1
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 2
+            }
+          },
+          "nested": {
+            "ImageSegment": {
+              "fields": {
+                "pictures": {
+                  "rule": "repeated",
+                  "type": "ImageCdnNode",
+                  "id": 1
+                },
+                "alternativeText": {
+                  "type": "string",
+                  "id": 2
+                },
+                "alternativeColor": {
+                  "type": "string",
+                  "id": 3
+                }
+              }
+            },
+            "PlainSegment": {
+              "fields": {
+                "text": {
+                  "type": "string",
+                  "id": 1
+                },
+                "color": {
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            },
+            "RichTextSegment": {
+              "oneofs": {
+                "segment": {
+                  "oneof": [
+                    "userInfo",
+                    "plain",
+                    "image"
+                  ]
+                }
+              },
+              "fields": {
+                "userInfo": {
+                  "type": "UserInfoSegment",
+                  "id": 1
+                },
+                "plain": {
+                  "type": "PlainSegment",
+                  "id": 2
+                },
+                "image": {
+                  "type": "ImageSegment",
+                  "id": 3
+                }
+              }
+            },
+            "UserInfoSegment": {
+              "fields": {
+                "user": {
+                  "type": "ZtLiveUserInfo",
+                  "id": 1
+                },
+                "color": {
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "CommonActionSignalUserEnterRoom": {
+          "fields": {
+            "userInfo": {
+              "type": "ZtLiveUserInfo",
+              "id": 1
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "CommonActionSignalUserFollowAuthor": {
+          "fields": {
+            "userInfo": {
+              "type": "ZtLiveUserInfo",
+              "id": 1
+            },
+            "sendTimeMs": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "CommonNotifySignalCoverAuditResult": {
+          "fields": {
+            "auditStatus": {
+              "type": "AuditStatus",
+              "id": 1
+            }
+          },
+          "nested": {
+            "AuditStatus": {
+              "values": {
+                "SUCCESS": 0,
+                "COVER_AUDIT_FAILED": 1,
+                "CAPTION_AUDIT_FAILED": 2,
+                "BOTH_FAILED": 3
+              }
+            }
+          }
+        },
+        "CommonNotifySignalKickedOut": {
+          "fields": {
+            "reason": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "CommonNotifySignalLiveManagerState": {
+          "fields": {
+            "state": {
+              "type": "ManagerState",
+              "id": 1
+            }
+          },
+          "nested": {
+            "ManagerState": {
+              "values": {
+                "MANAGER_STATE_UNKNOWN": 0,
+                "MANAGER_ADDED": 1,
+                "MANAGER_REMOVED": 2,
+                "IS_MANAGER": 3
+              }
+            }
+          }
+        },
+        "CommonNotifySignalViolationAlert": {
+          "fields": {
+            "violationContent": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "CommonStateSignalAuthorChatAccept": {
+          "fields": {
+            "a": {
+              "type": "string",
+              "id": 1
+            },
+            "b": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "CommonStateSignalAuthorChatCall": {
+          "fields": {
+            "a": {
+              "type": "string",
+              "id": 1
+            },
+            "b": {
+              "type": "AuthorChatPlayerInfo",
+              "id": 2
+            },
+            "c": {
+              "type": "int64",
+              "id": 3
+            }
+          }
+        },
+        "CommonStateSignalAuthorChatChangesSoundConfig": {
+          "fields": {
+            "a": {
+              "type": "string",
+              "id": 1
+            },
+            "b": {
+              "type": "Unknown",
+              "id": 2
+            }
+          },
+          "nested": {
+            "Unknown": {
+              "values": {
+                "c": 0,
+                "d": 1,
+                "e": 2
+              }
+            }
+          }
+        },
+        "CommonStateSignalAuthorChatEnd": {
+          "fields": {
+            "a": {
+              "type": "string",
+              "id": 1
+            },
+            "b": {
+              "type": "Unknown",
+              "id": 2
+            },
+            "c": {
+              "type": "string",
+              "id": 3
+            }
+          },
+          "nested": {
+            "Unknown": {
+              "values": {
+                "d": 0,
+                "e": 1,
+                "f": 2,
+                "g": 3,
+                "h": 4,
+                "i": 5,
+                "j": 6,
+                "k": 7,
+                "l": 8
+              }
+            }
+          }
+        },
+        "CommonStateSignalAuthorChatReady": {
+          "fields": {
+            "a": {
+              "type": "string",
+              "id": 1
+            },
+            "b": {
+              "type": "AuthorChatPlayerInfo",
+              "id": 2
+            },
+            "c": {
+              "type": "AuthorChatPlayerInfo",
+              "id": 3
+            }
+          }
+        },
+        "CommonStateSignalChatAccept": {
+          "fields": {
+            "chatId": {
+              "type": "string",
+              "id": 1
+            },
+            "mediaType": {
+              "type": "ChatMediaType",
+              "id": 2
+            },
+            "arraySignalInfo": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        },
+        "CommonStateSignalChatCall": {
+          "fields": {
+            "chatId": {
+              "type": "string",
+              "id": 1
+            },
+            "liveId": {
+              "type": "string",
+              "id": 2
+            },
+            "callTimestampMs": {
+              "type": "int64",
+              "id": 3
+            }
+          }
+        },
+        "CommonStateSignalChatEnd": {
+          "fields": {
+            "chatId": {
+              "type": "string",
+              "id": 1
+            },
+            "endType": {
+              "type": "EndType",
+              "id": 2
+            }
+          },
+          "nested": {
+            "EndType": {
+              "values": {
+                "UNKNOWN": 0,
+                "CANCEL_BY_AUTHOR": 1,
+                "END_BY_AUTHOR": 2,
+                "END_BY_GUEST": 3,
+                "GUEST_REJECT": 4,
+                "GUEST_TIMEOUT": 5,
+                "GUEST_HEARTBEAT_TIMEOUT": 6,
+                "AUTHOR_HEARTBEAT_TIMEOUT": 7
+              }
+            }
+          }
+        },
+        "CommonStateSignalChatReady": {
+          "fields": {
+            "chatId": {
+              "type": "string",
+              "id": 1
+            },
+            "guestUserInfo": {
+              "type": "ZtLiveUserInfo",
+              "id": 2
+            },
+            "mediaType": {
+              "type": "ChatMediaType",
+              "id": 3
+            }
+          }
+        },
+        "CommonStateSignalCurrentRedpackList": {
+          "fields": {
+            "redpacks": {
+              "rule": "repeated",
+              "type": "Redpack",
+              "id": 1
+            }
+          },
+          "nested": {
+            "RedpackDisplayStatus": {
+              "values": {
+                "SHOW": 0,
+                "GET_TOKEN": 1,
+                "GRAB": 2
+              }
+            },
+            "Redpack": {
+              "fields": {
+                "sender": {
+                  "type": "ZtLiveUserInfo",
+                  "id": 1
+                },
+                "displayStatus": {
+                  "type": "RedpackDisplayStatus",
+                  "id": 2
+                },
+                "grabBeginTimeMs": {
+                  "type": "int64",
+                  "id": 3
+                },
+                "getTokenLatestTimeMs": {
+                  "type": "int64",
+                  "id": 4
+                },
+                "redPackId": {
+                  "type": "string",
+                  "id": 5
+                },
+                "redpackBizUnit": {
+                  "type": "string",
+                  "id": 6
+                },
+                "redpackAmount": {
+                  "type": "int64",
+                  "id": 7
+                },
+                "settleBeginTime": {
+                  "type": "int64",
+                  "id": 8
+                }
+              }
+            }
+          }
+        },
+        "CommonStateSignalDisplayInfo": {
+          "fields": {
+            "watchingCount": {
+              "type": "string",
+              "id": 1
+            },
+            "likeCount": {
+              "type": "string",
+              "id": 2
+            },
+            "likeDelta": {
+              "type": "int32",
+              "id": 3
+            }
+          }
+        },
+        "CommonStateSignalFeatureStateSync": {
+          "fields": {
+            "featureState": {
+              "rule": "repeated",
+              "type": "LiveFeatureState",
+              "id": 1
+            }
+          }
+        },
+        "LiveFeatureState": {
+          "fields": {
+            "type": {
+              "type": "FeatureType",
+              "id": 1
+            },
+            "state": {
+              "type": "FeatureState",
+              "id": 2
+            }
+          },
+          "nested": {
+            "FeatureType": {
+              "values": {
+                "FEATURE_UNKNOWN": 0,
+                "LANDSCAPE_COMMENT": 1
+              }
+            },
+            "FeatureState": {
+              "values": {
+                "FEATURE_STATE_UNKNOWN": 0,
+                "FEATURE_STATE_OPEND": 1,
+                "FEATURE_STATE_CLOSED": 2
+              }
+            }
+          }
+        },
+        "CommonStateSignalRecentComment": {
+          "fields": {
+            "comment": {
+              "rule": "repeated",
+              "type": "CommonActionSignalComment",
+              "id": 1
+            }
+          }
+        },
+        "CommonStateSignalTopUsers": {
+          "fields": {
+            "user": {
+              "rule": "repeated",
+              "type": "TopUser",
+              "id": 1
+            }
+          },
+          "nested": {
+            "TopUser": {
+              "fields": {
+                "userInfo": {
+                  "type": "ZtLiveUserInfo",
+                  "id": 1
+                },
+                "customWatchingListData": {
+                  "type": "string",
+                  "id": 3
+                },
+                "displaySendAmount": {
+                  "type": "string",
+                  "id": 4
+                },
+                "anonymousUser": {
+                  "type": "bool",
+                  "id": 5
+                }
+              }
+            }
+          }
+        },
+        "CsAckErrorCode": {
+          "values": {
+            "SUCCESS_CS_ACK": 0,
+            "LIVE_CLOSED": 1,
+            "TICKET_ILLEGAL": 2,
+            "ATTACH_ILLEGAL": 3,
+            "USER_NOT_IN_ROOM": 4,
+            "SERVER_ERROR": 5,
+            "REQUEST_PARAM_INVALID": 6,
+            "ROOM_NOT_EXIST_IN_STATE_MANAGER": 7,
+            "NEW_LIVE_OPENED": 8
+          }
+        },
+        "ZtLiveActionSignalItem": {
+          "fields": {
+            "signalType": {
+              "type": "string",
+              "id": 1
+            },
+            "payload": {
+              "rule": "repeated",
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "ZtLiveChatProto": {
+          "values": {
+            "a": 0,
+            "b": 1,
+            "c": 2
+          }
+        },
+        "ZtLiveCsCmd": {
+          "fields": {
+            "cmdType": {
+              "type": "string",
+              "id": 1
+            },
+            "payload": {
+              "type": "bytes",
+              "id": 2
+            },
+            "ticket": {
+              "type": "string",
+              "id": 3
+            },
+            "liveId": {
+              "type": "string",
+              "id": 4
+            }
+          }
+        },
+        "ZtLiveCsCmdAck": {
+          "fields": {
+            "cmdAckType": {
+              "type": "string",
+              "id": 1
+            },
+            "errorCode": {
+              "type": "int64",
+              "id": 2
+            },
+            "errorMsg": {
+              "type": "string",
+              "id": 3
+            },
+            "payload": {
+              "type": "bytes",
+              "id": 4
+            }
+          }
+        },
+        "ZtLiveCsEnterRoom": {
+          "fields": {
+            "isAuthor": {
+              "type": "bool",
+              "id": 1
+            },
+            "reconnectCount": {
+              "type": "int32",
+              "id": 2
+            },
+            "lastErrorCode": {
+              "type": "int32",
+              "id": 3
+            },
+            "enterRoomAttach": {
+              "type": "string",
+              "id": 4
+            },
+            "clientLiveSdkVersion": {
+              "type": "string",
+              "id": 5
+            }
+          }
+        },
+        "ZtLiveCsEnterRoomAck": {
+          "fields": {
+            "heartbeatIntervalMs": {
+              "type": "int64",
+              "id": 1
+            }
+          }
+        },
+        "ZtLiveCsHeartbeat": {
+          "fields": {
+            "clientTimestampMs": {
+              "type": "int64",
+              "id": 1
+            },
+            "sequence": {
+              "type": "int64",
+              "id": 2
+            }
+          }
+        },
+        "ZtLiveCsHeartbeatAck": {
+          "fields": {
+            "serverTimestampMs": {
+              "type": "int64",
+              "id": 1
+            },
+            "clientTimestampMs": {
+              "type": "int64",
+              "id": 2
+            },
+            "clientSequence": {
+              "type": "int64",
+              "id": 3
+            }
+          }
+        },
+        "ZtLiveCsUserExit": {
+          "fields": {}
+        },
+        "ZtLiveCsUserExitAck": {
+          "fields": {}
+        },
+        "ZtLiveDownstreamPayloadErrorCode": {
+          "values": {
+            "SUCCESS_DOWNSTREAM_PAYLOAD": 0,
+            "CS_CMD_PARSE_ERROR": 100001,
+            "CS_CMD_CMD_NOT_SUPPORT": 100002,
+            "CS_CMD_TICKET_ILLEGAL": 100003
+          }
+        },
+        "ZtLiveNotifySignalItem": {
+          "fields": {
+            "signalType": {
+              "type": "string",
+              "id": 1
+            },
+            "payload": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "ZtLiveScActionSignal": {
+          "fields": {
+            "item": {
+              "rule": "repeated",
+              "type": "ZtLiveActionSignalItem",
+              "id": 1
+            }
+          }
+        },
+        "ZtLiveScMessage": {
+          "fields": {
+            "messageType": {
+              "type": "string",
+              "id": 1
+            },
+            "compressionType": {
+              "type": "CompressionType",
+              "id": 2
+            },
+            "payload": {
+              "type": "bytes",
+              "id": 3
+            },
+            "liveId": {
+              "type": "string",
+              "id": 4
+            },
+            "ticket": {
+              "type": "string",
+              "id": 5
+            },
+            "serverTimestampMs": {
+              "type": "int64",
+              "id": 6
+            }
+          },
+          "nested": {
+            "CompressionType": {
+              "values": {
+                "UNKNOWN": 0,
+                "NONE": 1,
+                "GZIP": 2
+              }
+            }
+          }
+        },
+        "ZtLiveScNotifySignal": {
+          "fields": {
+            "item": {
+              "rule": "repeated",
+              "type": "ZtLiveNotifySignalItem",
+              "id": 1
+            }
+          }
+        },
+        "ZtLiveScStateSignal": {
+          "fields": {
+            "item": {
+              "rule": "repeated",
+              "type": "ZtLiveStateSignalItem",
+              "id": 1
+            }
+          }
+        },
+        "ZtLiveStateSignalItem": {
+          "fields": {
+            "signalType": {
+              "type": "string",
+              "id": 1
+            },
+            "payload": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "ZtLiveScStatusChanged": {
+          "fields": {
+            "type": {
+              "type": "Type",
+              "id": 1
+            },
+            "maxRandomDelayMs": {
+              "type": "int64",
+              "id": 2
+            },
+            "bannedInfo": {
+              "type": "BannedInfo",
+              "id": 3
+            }
+          },
+          "nested": {
+            "Type": {
+              "values": {
+                "UNKNOWN": 0,
+                "LIVE_CLOSED": 1,
+                "NEW_LIVE_OPENED": 2,
+                "LIVE_URL_CHANGED": 3,
+                "LIVE_BANNED": 4
+              }
+            },
+            "BannedInfo": {
+              "fields": {
+                "banReason": {
+                  "type": "string",
+                  "id": 1
+                }
+              }
+            }
+          }
+        },
+        "ZtLiveScTicketInvalid": {
+          "fields": {}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = ".;acproto";
+
+package AcFunDanmu;
+
+message ZtLiveStateSignalItem {
+	string signalType = 1;
+	bytes payload = 2;
+}

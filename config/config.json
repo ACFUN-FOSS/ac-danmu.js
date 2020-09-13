@@ -1,0 +1,14 @@
+{
+    "app_name": "link-sdk",
+    "sdk_version": "1.2.1",
+    "app_id": 13,
+    "client_live_sdk_version": "kwai-acfun-live-link",
+    "acfun_visitor_sid": "acfun.api.visitor",
+    "acfun_visitorSt_name": "acfun.api.visitor_st",
+    "safety_id_content": "{\"platform\":5,\"app_version\":\"2.0.32\",\"device_id\":\"null\",\"userId\":\"%d\"}",
+    "kuaishou": {
+        "subBiz": "mainApp",
+        "kpn": "ACFUN_APP",
+        "kpf": "PC_WEB"
+    }
+}

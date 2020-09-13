@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = ".;acproto";
+
+package AcFunDanmu;
+
+message CommonStateSignalDisplayInfo {
+	string watchingCount = 1;
+	string likeCount = 2;
+	int32 likeDelta = 3;
+}

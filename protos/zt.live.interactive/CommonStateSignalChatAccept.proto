@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = ".;acproto";
+
+package AcFunDanmu;
+
+import "ChatMediaType.proto";
+
+message CommonStateSignalChatAccept {
+	string chatId = 1;
+	ChatMediaType mediaType = 2;
+	string arraySignalInfo = 3;
+}

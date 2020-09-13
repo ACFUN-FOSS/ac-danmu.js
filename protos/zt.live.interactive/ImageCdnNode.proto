@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = ".;acproto";
+
+package AcFunDanmu;
+
+message ImageCdnNode {
+	string cdn = 1;
+	string url = 2;
+	string urlPattern = 3;
+}

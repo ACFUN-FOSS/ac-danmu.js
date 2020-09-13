@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = ".;acproto";
+
+package AcFunDanmu;
+
+message CommonNotifySignalKickedOut {
+	string reason = 1;
+}

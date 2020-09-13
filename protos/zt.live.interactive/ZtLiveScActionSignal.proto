@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = ".;acproto";
+
+package AcFunDanmu;
+
+import "ZtLiveActionSignalItem.proto";
+
+message ZtLiveScActionSignal {
+	repeated ZtLiveActionSignalItem item = 1;
+}
