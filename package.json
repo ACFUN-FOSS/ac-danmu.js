@@ -1,13 +1,20 @@
 {
-  "name": "ac-danmu.js",
+  "name": "ac-danmu",
   "version": "0.1.0",
-  "description": "",
+  "description": "acfun直播弹幕获取",
   "main": "client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "acfun","danmaku","danmu"
+  ],
   "author": "kanoyami",
   "license": "GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanoyami/ac-danmu.js"
+  },
   "dependencies": {
     "cookie": "^0.4.1",
     "crypto-js": "^4.0.0",
