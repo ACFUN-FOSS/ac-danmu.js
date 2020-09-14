@@ -1,12 +1,12 @@
 {
-  "name": "acfun-",
+  "name": "ac-danmu.js",
   "version": "0.1.0",
   "description": "",
-  "main": "app.js",
+  "main": "client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "kanoyami",
   "license": "GPLv3",
   "dependencies": {
     "cookie": "^0.4.1",
