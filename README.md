@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-09-15 00:30:41
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 00:50:08
+ * @LastEditTime: 2020-09-15 01:00:27
 -->
 
 # ac-danmu.js 
@@ -20,6 +20,8 @@
 ### 使用方式
 
 ``` JavaScript
+const AcClient = require("ac-danmu")
+
 //使用init(主播房间号)初始化客户端
 AcClient.init("8500263").then((ac_client) => {
     //启动websocket连接
@@ -41,6 +43,8 @@ AcClient.init("8500263").then((ac_client) => {
 或者
 
 ``` JavaScript
+const AcClient = require("ac-danmu")
+
 //使用init(主播房间号)初始化客户端
 ac_client = await AcClient.init("8500263")
 //启动websocket连接
