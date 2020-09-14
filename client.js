@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 16:54:29
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-14 01:21:15
+ * @LastEditTime: 2020-09-14 13:57:31
  */
 const tools = require("./tools")
 var WebSocketClient = require('websocket').client;
@@ -63,16 +63,17 @@ class AcClient {
                     client.connect('wss://link.xiatou.com/');
                 }, 5000)
             });
-            connection.on('message', function (message) {
+            connection.on('message', (message) => {
                 console.log(message)
+                proto.decodePackTest(message.binaryData, this.acSecurity)
             });
             let sendBytes = () => {
-                this.seqId++
-                let buffer = proto.genRegisterPack(this.did, this.seqId, this.instanceId, this.userId, this.acSecurity)
-                proto.decodePackTest(buffer)
+
                 if (connection.connected) {
-                    let buffer = proto.genRegisterPack(this.did, this.seqId, this.instanceId, this.userId, this.acSecurity)
-                    console.log(buffer.toString("base64"))
+                    this.seqId++
+                    let buffer = proto.genRegisterPack(this.seqId, this.instanceId, this.userId, this.acSecurity, this.visitorSt)
+                    //proto.decodePackTest(buffer, this.acSecurity)
+                    //console.log(buffer.toString("base64"))
                     connection.sendBytes(buffer);
                 }
             }
@@ -84,7 +85,7 @@ class AcClient {
 }
 
 (async () => {
-    let ac_client = await AcClient.init("934542")
-    // console.log(ac_client)
+    let ac_client = await AcClient.init("3497134")
+
     ac_client.wss()
 })()

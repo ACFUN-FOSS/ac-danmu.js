@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 19:04:27
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-14 01:11:12
+ * @LastEditTime: 2020-09-14 14:00:00
  */
 
 
@@ -10,7 +10,7 @@ const acConfig = require("./config/config.json")
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
 const crypto = require('crypto');
 const EncryptionMode = ROOT.lookupEnum("AcFunDanmu.EncryptionMode")
-
+var CryptoJS = require("crypto-js");
 let base = {
     genCommand: (command, msg, ticket, liveId) => {
         const ZtLiveCsCmd = ROOT.lookupType("AcFunDanmu.ZtLiveCsCmd")
@@ -39,9 +39,9 @@ let base = {
     /**
      * @argument key {string}
      */
-    genHeader: (seqId, instanceId, uid, length, encryptionMode = EncryptionMode.values.kEncryptionSessionKey, key) => {
+    genHeader: (seqId, instanceId, uid, length, encryptionMode = EncryptionMode.values.kEncryptionSessionKey, token) => {
         const PacketHeader = ROOT.lookupType("AcFunDanmu.PacketHeader")
-        let keybuffer = Buffer.from(key)
+        let tokenBuffer = Buffer.from(token)
         let payload = {
             flags: null,
             encodingType: null,
@@ -56,7 +56,7 @@ let base = {
             seqId: seqId
         }
         if (encryptionMode === EncryptionMode.values.kEncryptionServiceToken)
-            payload.tokenInfo = { tokenType: 1, token: keybuffer }
+            payload.tokenInfo = { tokenType: 1, token: tokenBuffer }
         let packetHeader = PacketHeader.create(payload)
         let buffer = PacketHeader.encode(packetHeader).finish()
         // console.log("header object")
@@ -64,7 +64,7 @@ let base = {
         // console.log(PacketHeader.decode(buffer))
         return buffer
     },
-    genRegister: (instanceId, uid, deviceId) => {
+    genRegister: (instanceId, uid) => {
         const RegisterRequest = ROOT.lookupType("AcFunDanmu.RegisterRequest")
         const PlatformType = ROOT.lookupEnum("AcFunDanmu.DeviceInfo.PlatformType")
         const PresenceStatus = ROOT.lookupEnum("AcFunDanmu.RegisterRequest.PresenceStatus")
@@ -77,7 +77,6 @@ let base = {
             deviceInfo: {
                 platformType: PlatformType.values.H5,
                 deviceModel: "h5",
-                deviceId: deviceId,
                 imeiMd5: null
             },
             presenceStatus: PresenceStatus.values.kPresenceOnline,
@@ -87,7 +86,6 @@ let base = {
                 kpn: acConfig.kuaishou.kpn,
                 kpf: acConfig.kuaishou.kpf,
                 uid: uid,
-                did: deviceId
             }
         }
         let register = RegisterRequest.create(payload)
@@ -98,13 +96,15 @@ let base = {
     },
     encode: (header, body, key) => {
         // console.log(UpstreamPayload.decode(body))
-         console.log(body.length)
+        //console.log(body.length)
         const iv = crypto.randomBytes(16)
-        //console.log(iv)
-        let cipher = crypto.createCipheriv("aes-192-cbc", key, iv)
-        let encryptedWithoutFinal = cipher.update(body)
-        let finalEn = cipher.final()
-        let encrypted = Buffer.concat([encryptedWithoutFinal, finalEn])
+        let keyBuffer = Buffer.from(key, "base64")
+        let cipher = crypto.createCipheriv("AES-128-CBC", keyBuffer, iv, {
+
+        })
+        cipher.setAutoPadding(true)
+        let encrypted = Buffer.concat([cipher.update(body), cipher.final()])
+       // console.log(encrypted.length)
         let headerSize = header.length
         let bodySize = encrypted.length
         // console.log(bodySize)
@@ -112,7 +112,7 @@ let base = {
         let s2 = Buffer.alloc(4)
         let s3 = Buffer.alloc(4)
         s2.writeInt32BE(headerSize)
-        s3.writeInt32BE(bodySize)
+        s3.writeInt32BE(bodySize + 16)
         // console.log(header.toString("base64"))
         // console.log(iv.toString("base64"))
         // console.log(encrypted.toString("base64"))
@@ -126,39 +126,44 @@ let base = {
 }
 
 module.exports = {
-    genRegisterPack: (deviceId, seqId, instanceId, uid, key) => {
+    genRegisterPack: (seqId, instanceId, uid, key, token) => {
         // console.log(deviceId)
         // console.log(seqId)
         // console.log(instanceId)
         // console.log(uid)
         // console.log(key)
-        let register = base.genRegister(instanceId, uid, deviceId)
+        let register = base.genRegister(instanceId, uid)
         let registerBody = base.genPayload(seqId, 1, "Basic.Register", register)
         let bodySize = registerBody.length
-        return base.encode(base.genHeader(seqId, instanceId, uid, bodySize, EncryptionMode.values.kEncryptionServiceToken, key),
+        return base.encode(base.genHeader(seqId, instanceId, uid, bodySize, EncryptionMode.values.kEncryptionServiceToken, token),
             registerBody, key)
     },
     /**
      * @argument buffer {Buffer}
      */
-    decodePackTest: (buffer) => {
-        const UpstreamPayload = ROOT.lookupType("AcFunDanmu.UpstreamPayload")
+    decodePackTest: (buffer, key) => {
+        console.log(buffer.toString("hex"))
+        let keyBuffer = Buffer.from(key, "base64")
+        const DownstreamPayload = ROOT.lookupType("AcFunDanmu.DownstreamPayload")
         const PacketHeader = ROOT.lookupType("AcFunDanmu.PacketHeader")
-        const RegisterRequest = ROOT.lookupType("AcFunDanmu.RegisterRequest")
+        const RegisterResponse = ROOT.lookupType("AcFunDanmu.RegisterResponse")
         let headersize = buffer.readInt32BE(4)
+        let bodysize = buffer.readInt32BE(8)
+        console.log("headerSize:" + headersize)
+        console.log("bodysize:" + bodysize)
         let header = buffer.slice(12, 12 + headersize)
         let headerDecode = PacketHeader.decode(header)
         console.log(headerDecode)
-        let key = headerDecode.tokenInfo.token.toString()
         let ivBuffer = buffer.slice(12 + headersize, 28 + headersize)
-        let bodyBuffer = buffer.slice(28 + headersize, buffer.length)
-        let decipher = crypto.createDecipheriv("aes-192-cbc", key, ivBuffer)
+        let bodyBuffer = buffer.slice(28 + headersize)
+        let decipher = crypto.createDecipheriv("AES-128-CBC-HMAC-SHA256", keyBuffer, ivBuffer)
         let decryptedWithoutFinal = decipher.update(bodyBuffer)
         let finalDe = decipher.final()
         let decrypted = Buffer.concat([decryptedWithoutFinal, finalDe])
-        let payload = UpstreamPayload.decode(decrypted)
+        console.log("decoudeSize:" + decrypted.toString("hex"))
+        let payload = DownstreamPayload.decode(decrypted)
         console.log(payload)
-        let rr = RegisterRequest.decode(payload.payloadData)
+        let rr = RegisterResponse.decode(payload.payloadData)
         console.log(rr)
     }
 }
