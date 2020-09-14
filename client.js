@@ -1,11 +1,14 @@
 /*
  * @Date: 2020-09-12 16:54:29
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-14 13:57:31
+ * @LastEditTime: 2020-09-14 17:46:25
  */
+const ProtoBufJs = require("protobufjs");
+const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
 const tools = require("./tools")
 var WebSocketClient = require('websocket').client;
-const proto = require("./proto")
+const proto = require("./proto");
+const { defaultHandler } = require("got/dist/source");
 class AcClient {
     did
     visitorSt
@@ -14,13 +17,15 @@ class AcClient {
     liveId
     availiableTickets
     enterRoomAttach
-    seqId = 0
+    connection
+    seqId = 1
     instanceId = 0
     sessionKey = ""
     headerSeqId = 1
     heartbeatSeqId = 1
     ticketIndex = 0
     retryCount = 0
+    timer
     constructor(did, visitorSt, acSecurity, userId, liveId, availiableTickets, enterRoomAttach) {
         this.did = did
         this.visitorSt = visitorSt
@@ -42,8 +47,54 @@ class AcClient {
         let liveId = live_info.liveId
         return new AcClient(did, visitorSt, acSecurity, userId, liveId, availiableTickets, enterRoomAttach)
     }
+    sendBytes = (buffer) => {
+        if (this.connection.connected) {
+            this.connection.sendBytes(buffer);
+            this.seqId++
+        } else console.log("Ws closed")
+    }
+    //确定返回类型
+    decodeProcess = (buffer) => {
+        const DownstreamPayload = ROOT.lookupType("DownstreamPayload")
+        let header = proto.decodeHeader(buffer)
+        if (header.encryptionMode == 1) this.processRegisterResponse(buffer)
+        else {
+            let decrypted = proto.decrypt(buffer, this.sessionKey)
+            let payload = DownstreamPayload.decode(decrypted)
+            //console.log(payload)
+            switch (payload.command) {
+                case 'Push.ZtLiveInteractive.Message':
+                    const ZtLiveCsCmdAck = ROOT.lookupType("ZtLiveCsCmdAck")
+                    let dt = ZtLiveCsCmdAck.decode(payload.payloadData)
+                    //console.log(dt.errorMsg.toString())
+                    break;
+                case "Basic.KeepAlive":
+                    const KeepAliveResponse  = ROOT.lookupType("KeepAliveResponse")
+                    let keepAliveResponse = KeepAliveResponse.decode(payload.payloadData)
+                    let ms = keepAliveResponse.serverMsec.toString()
+                    console.log(ms)
+                    break;
+                case "Global.ZtLiveInteractive.CsCmd": break
+                default:
+                    break;
+            }
+        }
+    }
 
-    wss = async () => {
+
+    //处理RR 
+    processRegisterResponse = (buffer) => {
+        const DownstreamPayload = ROOT.lookupType("DownstreamPayload")
+        const RegisterResponse = ROOT.lookupType("RegisterResponse")
+        let decrypted = proto.decrypt(buffer, this.acSecurity)
+        let payload = DownstreamPayload.decode(decrypted)
+        let rr = RegisterResponse.decode(payload.payloadData)
+        this.instanceId = rr.instanceId
+        this.sessionKey = rr.sessKey.toString("base64")
+        this.sendBytes(proto.genKeepAlivePack(this.seqId, this.instanceId, this.userId, this.sessionKey))
+        this.sendBytes(proto.genEnterRoomPack(this.seqId, this.instanceId, this.userId, this.sessionKey, this.enterRoomAttach, this.availiableTickets[this.ticketIndex], this.liveId))
+    }
+    wss = () => {
 
         var client = new WebSocketClient();
 
@@ -53,6 +104,9 @@ class AcClient {
 
         client.on('connect', (connection) => {
             console.log('WebSocket Client Connected');
+            this.connection = connection
+            let register = proto.genRegisterPack(this.seqId, this.instanceId, this.userId, this.acSecurity, this.visitorSt)
+            this.sendBytes(register)
             connection.on('error', function (error) {
                 console.log("Connection Error: " + error.toString());
             });
@@ -64,20 +118,9 @@ class AcClient {
                 }, 5000)
             });
             connection.on('message', (message) => {
-                console.log(message)
-                proto.decodePackTest(message.binaryData, this.acSecurity)
+                //console.log(message)
+                this.decodeProcess(message.binaryData)
             });
-            let sendBytes = () => {
-
-                if (connection.connected) {
-                    this.seqId++
-                    let buffer = proto.genRegisterPack(this.seqId, this.instanceId, this.userId, this.acSecurity, this.visitorSt)
-                    //proto.decodePackTest(buffer, this.acSecurity)
-                    //console.log(buffer.toString("base64"))
-                    connection.sendBytes(buffer);
-                }
-            }
-            sendBytes();
         });
 
         client.connect('wss://link.xiatou.com/');
@@ -85,7 +128,7 @@ class AcClient {
 }
 
 (async () => {
-    let ac_client = await AcClient.init("3497134")
+    let ac_client = await AcClient.init("67403")
 
     ac_client.wss()
 })()

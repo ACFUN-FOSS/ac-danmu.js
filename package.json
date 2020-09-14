@@ -12,6 +12,7 @@
     "cookie": "^0.4.1",
     "crypto-js": "^4.0.0",
     "got": "^11.6.2",
+    "long": "^4.0.0",
     "protobufjs": "^6.10.1",
     "querystring": "^0.2.0",
     "websocket": "^1.0.32"
