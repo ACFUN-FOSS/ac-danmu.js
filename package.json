@@ -1,6 +1,6 @@
 {
   "name": "ac-danmu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "acfun直播弹幕获取",
   "main": "client.js",
   "scripts": {

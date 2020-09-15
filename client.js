@@ -1,19 +1,15 @@
 /*
  * @Date: 2020-09-12 16:54:29
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 12:29:30
+ * @LastEditTime: 2020-09-15 15:05:47
  */
 const ProtoBufJs = require("protobufjs");
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
 const tools = require("./tools");
-const StateHandler = require("./handler/state.handler");
-const ActionHandler = require("./handler/action.handler");
+const commandHandler = require("./handler/command.handler");
 var WebSocketClient = require("websocket").client;
 const proto = require("./proto");
 var events = require("events");
-const { unzip } = require("zlib");
-const { promisify } = require("util");
-const do_unzip = promisify(unzip);
 
 class AcClient {
   did;
@@ -59,8 +55,8 @@ class AcClient {
     let acSecurity = login_info.acSecurity;
     const live_info = await tools
       .startPlayInfoByVisitor(did, userId, visitorSt, author_id)
-      .catch((err) => {
-        console.log("直播间可能煤油开播");
+      .catch(() => {
+        console.error("直播间可能煤油开播");
       });
     let availiableTickets = live_info["availableTickets"];
     let enterRoomAttach = live_info.enterRoomAttach;
@@ -89,86 +85,89 @@ class AcClient {
     else {
       let decrypted = proto.decrypt(buffer, this.sessionKey);
       let payload = DownstreamPayload.decode(decrypted);
-      switch (payload.command) {
-        case "Push.ZtLiveInteractive.Message":
-          const ZtLiveScMessage = ROOT.lookupType("ZtLiveScMessage");
-          const CompressionType = ROOT.lookupEnum(
-            "ZtLiveScMessage.CompressionType"
-          );
-          //   setInterval(()=>{
-          //     this.sendBytes(
-          //         proto.genPushMessagePack(
-          //           this.seqId,
-          //           this.instanceId,
-          //           this.userId,
-          //           this.sessionKey
-          //         )
-          //       )
-          //   },1000)
+      await commandHandler(payload, this);
 
-          let ztPayload = ZtLiveScMessage.decode(payload.payloadData);
-          let msg = ztPayload.payload;
-          if (ztPayload.compressionType == CompressionType.values.GZIP)
-            msg = await do_unzip(ztPayload.payload);
-          switch (ztPayload.messageType) {
-            case "ZtLiveScActionSignal":
-              ActionHandler(msg, this);
-              break;
-            case "ZtLiveScStateSignal":
-              //todo
-              StateHandler(msg, this);
-              break;
-            case "ZtLiveScNotifySignal":
-              break;
+      // switch (payload.command) {
 
-            default:
-              break;
-          }
-          //console.log(ZtLiveScMessage.decode(payload.payloadData));
+      //   case "Push.ZtLiveInteractive.Message":
+      //     const ZtLiveScMessage = ROOT.lookupType("ZtLiveScMessage");
+      //     const CompressionType = ROOT.lookupEnum(
+      //       "ZtLiveScMessage.CompressionType"
+      //     );
+      //     //   setInterval(()=>{
+      //     //     this.sendBytes(
+      //     //         proto.genPushMessagePack(
+      //     //           this.seqId,
+      //     //           this.instanceId,
+      //     //           this.userId,
+      //     //           this.sessionKey
+      //     //         )
+      //     //       )
+      //     //   },1000)
 
-          //console.log(dt.errorMsg.toString())
-          break;
-        case "Basic.KeepAlive":
-          const KeepAliveResponse = ROOT.lookupType("KeepAliveResponse");
-          let keepAliveResponse = KeepAliveResponse.decode(payload.payloadData);
-          //todo 处理返回
-          break;
-        case "Global.ZtLiveInteractive.CsCmd":
-          const ZtLiveCsCmdAck = ROOT.lookupType("ZtLiveCsCmdAck");
-          let ztLiveCsCmdAck = ZtLiveCsCmdAck.decode(payload.payloadData);
-          switch (ztLiveCsCmdAck.cmdAckType) {
-            case "ZtLiveCsEnterRoomAck":
-              const ZtLiveCsEnterRoomAck = ROOT.lookupType(
-                "ZtLiveCsEnterRoomAck"
-              );
-              let enterRoomAck = ZtLiveCsEnterRoomAck.decode(
-                ztLiveCsCmdAck.payload
-              );
-              //发送进入事件
-              this.emit("enter", enterRoomAck);
-              let ms = enterRoomAck.heartbeatIntervalMs.toNumber();
-              this.timer = setInterval(() => {
-                this.sendBytes(
-                  proto.genHeartbeatPack(
-                    this.seqId,
-                    this.instanceId,
-                    this.userId,
-                    this.sessionKey,
-                    this.availiableTickets[this.ticketIndex],
-                    this.liveId
-                  )
-                );
-              }, ms);
+      //     let ztPayload = ZtLiveScMessage.decode(payload.payloadData);
+      //     let msg = ztPayload.payload;
+      //     if (ztPayload.compressionType == CompressionType.values.GZIP)
+      //       msg = await do_unzip(ztPayload.payload);
+      //     switch (ztPayload.messageType) {
+      //       case "ZtLiveScActionSignal":
+      //         ActionHandler(msg, this);
+      //         break;
+      //       case "ZtLiveScStateSignal":
+      //         //todo
+      //         StateHandler(msg, this);
+      //         break;
+      //       case "ZtLiveScNotifySignal":
+      //         break;
 
-              break;
+      //       default:
+      //         break;
+      //     }
+      //     //console.log(ZtLiveScMessage.decode(payload.payloadData));
 
-            default:
-              break;
-          }
-          break;
-        default:
-          break;
-      }
+      //     //console.log(dt.errorMsg.toString())
+      //     break;
+      //   case "Basic.KeepAlive":
+      //     const KeepAliveResponse = ROOT.lookupType("KeepAliveResponse");
+      //     let keepAliveResponse = KeepAliveResponse.decode(payload.payloadData);
+      //     //todo 处理返回
+      //     break;
+      //   case "Global.ZtLiveInteractive.CsCmd":
+      //     const ZtLiveCsCmdAck = ROOT.lookupType("ZtLiveCsCmdAck");
+      //     let ztLiveCsCmdAck = ZtLiveCsCmdAck.decode(payload.payloadData);
+      //     switch (ztLiveCsCmdAck.cmdAckType) {
+      //       case "ZtLiveCsEnterRoomAck":
+      //         const ZtLiveCsEnterRoomAck = ROOT.lookupType(
+      //           "ZtLiveCsEnterRoomAck"
+      //         );
+      //         let enterRoomAck = ZtLiveCsEnterRoomAck.decode(
+      //           ztLiveCsCmdAck.payload
+      //         );
+      //         //发送进入事件
+      //         this.emit("enter", enterRoomAck);
+      //         let ms = enterRoomAck.heartbeatIntervalMs.toNumber();
+      //         this.timer = setInterval(() => {
+      //           this.sendBytes(
+      //             proto.genHeartbeatPack(
+      //               this.seqId,
+      //               this.instanceId,
+      //               this.userId,
+      //               this.sessionKey,
+      //               this.availiableTickets[this.ticketIndex],
+      //               this.liveId
+      //             )
+      //           );
+      //         }, ms);
+
+      //         break;
+
+      //       default:
+      //         break;
+      //     }
+      //     break;
+      //   default:
+      //     break;
+      // }
     }
   };
 
