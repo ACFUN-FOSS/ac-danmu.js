@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 16:54:29
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 15:05:47
+ * @LastEditTime: 2020-09-15 23:38:01
  */
 const ProtoBufJs = require("protobufjs");
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
@@ -12,6 +12,8 @@ const proto = require("./proto");
 var events = require("events");
 
 class AcClient {
+
+  
   did;
   visitorSt;
   acSecurity;
