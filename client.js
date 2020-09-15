@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 16:54:29
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 00:51:13
+ * @LastEditTime: 2020-09-15 12:29:30
  */
 const ProtoBufJs = require("protobufjs");
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
@@ -131,7 +131,7 @@ class AcClient {
         case "Basic.KeepAlive":
           const KeepAliveResponse = ROOT.lookupType("KeepAliveResponse");
           let keepAliveResponse = KeepAliveResponse.decode(payload.payloadData);
-          //console.log(keepAliveResponse);
+          //todo 处理返回
           break;
         case "Global.ZtLiveInteractive.CsCmd":
           const ZtLiveCsCmdAck = ROOT.lookupType("ZtLiveCsCmdAck");

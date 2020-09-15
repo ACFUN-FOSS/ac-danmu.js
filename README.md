@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-09-15 00:30:41
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 01:00:27
+ * @LastEditTime: 2020-09-15 12:57:16
 -->
 
 # ac-danmu.js 
@@ -9,8 +9,8 @@
 ### 简介
 
 * ac-danmu.js是[orzogc/acfundanmu](https://github[.com/orzogc/acfundanmu)的Nodejs实现，这两个项目的诞生都离不开[wpscott/AcFunDanmaku](https://github.com/wpscott/AcFunDanmaku/tree/master/AcFunDanmu)提供的实现思路和配置文件，请给他们点Star
-* ac-danmu.js是一个用于获取acfun直播弹幕的服务端js组件
-* 因为使用了buffer所以不能运行在浏览器环境下
+## ac-danmu.js是一个用于获取acfun直播弹幕的服务端js组件
+* 因为使用了buffer所以不能运行在浏览器环境下,编写使用node v12 lts
 
 ### 可实现
 
