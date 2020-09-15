@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-14 20:25:26
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 17:10:36
+ * @LastEditTime: 2020-09-16 02:27:08
  */
 
 const ProtoBufJs = require("protobufjs");
@@ -14,6 +14,7 @@ module.exports =
    * @param  client
    */
   function StateHandler(buffer, client) {
+    //console.log(buffer)
     const ZtLiveScStateSignal = ROOT.lookupType("ZtLiveScStateSignal");
     let items = ZtLiveScStateSignal.decode(buffer).item;
     items.forEach((element) => {

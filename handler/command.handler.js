@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-15 14:52:17
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 16:14:07
+ * @LastEditTime: 2020-09-16 02:28:13
  */
 
 const ProtoBufJs = require("protobufjs");
@@ -31,7 +31,7 @@ module.exports =
             client.instanceId,
             client.userId,
             client.sessionKey
-          )
+          ,"d4")
         );
         let ztPayload = ZtLiveScMessage.decode(payload.payloadData);
         let msg = ztPayload.payload;
@@ -75,7 +75,7 @@ module.exports =
                 client.enterRoomAttach,
                 client.availiableTickets[client.ticketIndex],
                 client.liveId
-              )
+              ,"d6")
             );
           default:
             console.log("unkown message type:" + ztPayload.messageType);
@@ -109,7 +109,7 @@ module.exports =
             );
             //发送进入事件
             client.emit("enter", enterRoomAck);
-            let ms = enterRoomAck.heartbeatIntervalMs.toNumber();
+            let ms = enterRoomAck.heartbeatIntervalMs.toNumber()?enterRoomAck.heartbeatIntervalMs.toNumber():1000;
             client.timer = setInterval(() => {
               client.sendBytes(
                 proto.genHeartbeatPack(
@@ -119,7 +119,7 @@ module.exports =
                   client.sessionKey,
                   client.availiableTickets[client.ticketIndex],
                   client.liveId
-                )
+                ),"d7"
               );
             }, ms);
             break;

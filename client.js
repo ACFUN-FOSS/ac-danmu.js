@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 16:54:29
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 23:38:01
+ * @LastEditTime: 2020-09-16 02:27:21
  */
 const ProtoBufJs = require("protobufjs");
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
@@ -11,170 +11,55 @@ var WebSocketClient = require("websocket").client;
 const proto = require("./proto");
 var events = require("events");
 
-class AcClient {
+function AcClient(
+  did,
+  visitorSt,
+  acSecurity,
+  userId,
+  liveId,
+  availiableTickets,
+  enterRoomAttach
+) {
+  events.EventEmitter.call(this);
+  this.did = did;
+  this.visitorSt = visitorSt;
+  this.acSecurity = acSecurity;
+  this.userId = userId;
+  this.liveId = liveId;
+  this.availiableTickets = availiableTickets;
+  this.enterRoomAttach = enterRoomAttach;
+  this.connection = null;
+  this.seqId = 1;
+  this.instanceId = 0;
+  this.sessionKey = "";
+  this.headerSeqId = 1;
+  this.heartbeatSeqId = 1;
+  this.ticketIndex = 0;
+  this.retryCount = 0;
+  this.timer = null;
 
-  
-  did;
-  visitorSt;
-  acSecurity;
-  userId;
-  liveId;
-  availiableTickets;
-  enterRoomAttach;
-  connection;
-  seqId = 1;
-  instanceId = 0;
-  sessionKey = "";
-  headerSeqId = 1;
-  heartbeatSeqId = 1;
-  ticketIndex = 0;
-  retryCount = 0;
-  timer;
-
-  constructor(
-    did,
-    visitorSt,
-    acSecurity,
-    userId,
-    liveId,
-    availiableTickets,
-    enterRoomAttach
-  ) {
-    events.EventEmitter.call(this);
-    this.did = did;
-    this.visitorSt = visitorSt;
-    this.acSecurity = acSecurity;
-    this.userId = userId;
-    this.liveId = liveId;
-    this.availiableTickets = availiableTickets;
-    this.enterRoomAttach = enterRoomAttach;
-  }
-  static init = async (author_id) => {
-    let did = await tools.getDid();
-    const login_info = await tools.visitorlogin(this.did);
-    let visitorSt = login_info.visitorSt;
-    let userId = login_info.userId;
-    let acSecurity = login_info.acSecurity;
-    const live_info = await tools
-      .startPlayInfoByVisitor(did, userId, visitorSt, author_id)
-      .catch(() => {
-        console.error("直播间可能煤油开播");
-      });
-    let availiableTickets = live_info["availableTickets"];
-    let enterRoomAttach = live_info.enterRoomAttach;
-    let liveId = live_info.liveId;
-    return new AcClient(
-      did,
-      visitorSt,
-      acSecurity,
-      userId,
-      liveId,
-      availiableTickets,
-      enterRoomAttach
-    );
-  };
-  sendBytes = (buffer) => {
+  this.sendBytes = (buffer, test) => {
     if (this.connection.connected) {
       this.connection.sendBytes(buffer);
       this.seqId++;
     } else console.log("Ws closed");
   };
   //确定返回类型
-  decodeProcess = async (buffer) => {
+  this.decodeProcess = async (buffer) => {
     const DownstreamPayload = ROOT.lookupType("DownstreamPayload");
     let header = proto.decodeHeader(buffer);
     if (header.encryptionMode == 1) this.processRegisterResponse(buffer);
     else {
       let decrypted = proto.decrypt(buffer, this.sessionKey);
+     
       let payload = DownstreamPayload.decode(decrypted);
+      //console.log(payload)
       await commandHandler(payload, this);
-
-      // switch (payload.command) {
-
-      //   case "Push.ZtLiveInteractive.Message":
-      //     const ZtLiveScMessage = ROOT.lookupType("ZtLiveScMessage");
-      //     const CompressionType = ROOT.lookupEnum(
-      //       "ZtLiveScMessage.CompressionType"
-      //     );
-      //     //   setInterval(()=>{
-      //     //     this.sendBytes(
-      //     //         proto.genPushMessagePack(
-      //     //           this.seqId,
-      //     //           this.instanceId,
-      //     //           this.userId,
-      //     //           this.sessionKey
-      //     //         )
-      //     //       )
-      //     //   },1000)
-
-      //     let ztPayload = ZtLiveScMessage.decode(payload.payloadData);
-      //     let msg = ztPayload.payload;
-      //     if (ztPayload.compressionType == CompressionType.values.GZIP)
-      //       msg = await do_unzip(ztPayload.payload);
-      //     switch (ztPayload.messageType) {
-      //       case "ZtLiveScActionSignal":
-      //         ActionHandler(msg, this);
-      //         break;
-      //       case "ZtLiveScStateSignal":
-      //         //todo
-      //         StateHandler(msg, this);
-      //         break;
-      //       case "ZtLiveScNotifySignal":
-      //         break;
-
-      //       default:
-      //         break;
-      //     }
-      //     //console.log(ZtLiveScMessage.decode(payload.payloadData));
-
-      //     //console.log(dt.errorMsg.toString())
-      //     break;
-      //   case "Basic.KeepAlive":
-      //     const KeepAliveResponse = ROOT.lookupType("KeepAliveResponse");
-      //     let keepAliveResponse = KeepAliveResponse.decode(payload.payloadData);
-      //     //todo 处理返回
-      //     break;
-      //   case "Global.ZtLiveInteractive.CsCmd":
-      //     const ZtLiveCsCmdAck = ROOT.lookupType("ZtLiveCsCmdAck");
-      //     let ztLiveCsCmdAck = ZtLiveCsCmdAck.decode(payload.payloadData);
-      //     switch (ztLiveCsCmdAck.cmdAckType) {
-      //       case "ZtLiveCsEnterRoomAck":
-      //         const ZtLiveCsEnterRoomAck = ROOT.lookupType(
-      //           "ZtLiveCsEnterRoomAck"
-      //         );
-      //         let enterRoomAck = ZtLiveCsEnterRoomAck.decode(
-      //           ztLiveCsCmdAck.payload
-      //         );
-      //         //发送进入事件
-      //         this.emit("enter", enterRoomAck);
-      //         let ms = enterRoomAck.heartbeatIntervalMs.toNumber();
-      //         this.timer = setInterval(() => {
-      //           this.sendBytes(
-      //             proto.genHeartbeatPack(
-      //               this.seqId,
-      //               this.instanceId,
-      //               this.userId,
-      //               this.sessionKey,
-      //               this.availiableTickets[this.ticketIndex],
-      //               this.liveId
-      //             )
-      //           );
-      //         }, ms);
-
-      //         break;
-
-      //       default:
-      //         break;
-      //     }
-      //     break;
-      //   default:
-      //     break;
-      // }
     }
   };
 
   //处理RR
-  processRegisterResponse = (buffer) => {
+  this.processRegisterResponse = (buffer) => {
     const DownstreamPayload = ROOT.lookupType("DownstreamPayload");
     const RegisterResponse = ROOT.lookupType("RegisterResponse");
     let decrypted = proto.decrypt(buffer, this.acSecurity);
@@ -202,7 +87,7 @@ class AcClient {
       )
     );
   };
-  wsStart = () => {
+  this.wsStart = () => {
     var client = new WebSocketClient();
 
     client.on("connectFailed", function (error) {
@@ -219,7 +104,7 @@ class AcClient {
         this.acSecurity,
         this.visitorSt
       );
-      this.sendBytes(register);
+      this.sendBytes(register, "dr");
       connection.on("error", function (error) {
         console.log("Connection Error: " + error.toString());
       });
@@ -240,6 +125,30 @@ class AcClient {
     client.connect("wss://link.xiatou.com/");
   };
 }
+
 AcClient.prototype.__proto__ = events.EventEmitter.prototype;
 
-module.exports = AcClient;
+module.exports = async (author_id) => {
+  let did = await tools.getDid();
+  const login_info = await tools.visitorlogin(this.did);
+  let visitorSt = login_info.visitorSt;
+  let userId = login_info.userId;
+  let acSecurity = login_info.acSecurity;
+  const live_info = await tools
+    .startPlayInfoByVisitor(did, userId, visitorSt, author_id)
+    .catch(() => {
+      console.error("直播间可能煤油开播");
+    });
+  let availiableTickets = live_info["availableTickets"];
+  let enterRoomAttach = live_info.enterRoomAttach;
+  let liveId = live_info.liveId;
+  return new AcClient(
+    did,
+    visitorSt,
+    acSecurity,
+    userId,
+    liveId,
+    availiableTickets,
+    enterRoomAttach
+  );
+};
