@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 19:04:27
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-16 02:17:24
+ * @LastEditTime: 2020-09-16 17:51:44
  */
 
 const ProtoBufJs = require("protobufjs");
@@ -162,6 +162,7 @@ module.exports = {
     let headersize = buffer.readInt32BE(4);
     let keyBuffer = Buffer.from(key, "base64");
     let ivBuffer = buffer.slice(12 + headersize, 28 + headersize);
+    console.log(ivBuffer)
     let bodyBuffer = buffer.slice(28 + headersize);
     let decipher = crypto.createDecipheriv("AES-128-CBC", keyBuffer, ivBuffer);
     return Buffer.concat([decipher.update(bodyBuffer), decipher.final()]);
