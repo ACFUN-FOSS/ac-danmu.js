@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-09-15 00:30:41
  * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-15 17:28:47
+ * @LastEditTime: 2020-10-09 15:50:49
 -->
 
 # ac-danmu.js
@@ -25,7 +25,7 @@
 const AcClient = require("ac-danmu")
 
 //使用init(主播房间号)初始化客户端
-AcClient.init("8500263").then((ac_client) => {
+AcClient("8500263").then((ac_client) => {
     //启动websocket连接
     ac_client.wsStart();
     ac_client.on("enter", () => {
@@ -48,7 +48,7 @@ AcClient.init("8500263").then((ac_client) => {
 const AcClient = require("ac-danmu")
 
 //使用init(主播房间号)初始化客户端
-ac_client = await AcClient.init("8500263")
+ac_client = await AcClient("8500263")
 //启动websocket连接
 ac_client.wsStart();
 ac_client.on("enter", () => {
