@@ -71,13 +71,17 @@ module.exports =
             client.emit("gift", giftDecode);
           });
           break;
-        case "CommonActionSignalRichText":
+        case "AcfunActionSignalJoinClub":
+          let joinClub = ROOT.lookupType(
+            "AcfunActionSignalJoinClub"
+             );
+            client.emit("join-club", joinClub);
           break;
         default:
-          const type = ROOT.lookupType(
-            element.signalType
-          );
-          console.log(type)
+          // const type = ROOT.lookupType(
+          //   element.signalType
+          // );
+          console.log(element.signalType)
           break;
       }
     });

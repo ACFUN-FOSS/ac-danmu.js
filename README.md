@@ -105,6 +105,7 @@ ac_client.on("danmaku", (danmaku) => {
 | recent-comment | 当前弹幕列表              | CommonActionSignalComment[]        |
 | topuser-info   | 前几名用户的数据          |  CommonStateSignalTopUsers        |
 |user-enter|用户进入直播间|CommonActionSignalUserEnterRoom
+|join-club|用户加入主播守护团|AcfunActionSignalJoinClub
 
 ### 安装
 
