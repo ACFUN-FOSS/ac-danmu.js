@@ -21,6 +21,7 @@
 
 ### 使用方式
 
+见example
 ``` JavaScript
 const AcClient = require("ac-danmu")
 

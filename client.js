@@ -114,11 +114,17 @@ function AcClient(
         setTimeout(() => {
           console.log("连接失败，正在重试");
           client.connect("wss://link.xiatou.com/");
-        }, 5000);
+        }, 1000);
       });
       connection.on("message", (message) => {
         //console.log(message)
-        this.decodeProcess(message.binaryData);
+        try {
+          this.decodeProcess(message.binaryData);
+        } catch (error) {
+          console.log(error)
+          connection.close()
+        }
+        
       });
     });
 
