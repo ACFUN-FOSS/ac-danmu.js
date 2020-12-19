@@ -1,7 +1,5 @@
 ﻿syntax = "proto3";
 
-option go_package = ".;acproto";
-
 package AcFunDanmu;
 
 enum LinkErrorCode {
@@ -28,7 +26,7 @@ enum LinkErrorCode {
     INVALID_COMMAND = 10020;
     PUSH_UNREGISTER_ERROR = 10021;
     INVALID_SID = 10022;
-    INVALID_instanceId = 10023;
+    INVALID_INSTANCE_ID = 10023;
     CLIENT_LOCALE_NOT_MATCH = 10024;
     INVALID_TOKEN_PASSWORD_CHANGED = 10025;
     INVALID_TOKEN_TOKEN_EXPIRED = 10026;

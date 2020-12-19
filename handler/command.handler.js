@@ -87,9 +87,6 @@ module.exports =
         let keepAliveResponse = KeepAliveResponse.decode(payload.payloadData);
         //todo 处理返回
         break;
-      case "Basic.KeepAlive":
-        //todo
-        break;
       case "Basic.Ping":
         //todo
         break;

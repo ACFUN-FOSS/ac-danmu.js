@@ -159,13 +159,18 @@ let base = {
 
 module.exports = {
   decrypt: (buffer, key) => {
-    let headersize = buffer.readInt32BE(4);
-    let keyBuffer = Buffer.from(key, "base64");
-    let ivBuffer = buffer.slice(12 + headersize, 28 + headersize);
-    console.log(ivBuffer)
-    let bodyBuffer = buffer.slice(28 + headersize);
-    let decipher = crypto.createDecipheriv("AES-128-CBC", keyBuffer, ivBuffer);
-    return Buffer.concat([decipher.update(bodyBuffer), decipher.final()]);
+    try {
+      let headersize = buffer.readInt32BE(4);
+      let keyBuffer = Buffer.from(key, "base64");
+      let ivBuffer = buffer.slice(12 + headersize, 28 + headersize);
+      let bodyBuffer = buffer.slice(28 + headersize);
+      let decipher = crypto.createDecipheriv("AES-128-CBC", keyBuffer, ivBuffer);
+      return Buffer.concat([decipher.update(bodyBuffer), decipher.final()]);
+    } catch (error) {
+      console.log(error)
+      return 
+    }
+
   },
   decodeHeader: (buffer) => {
     const PacketHeader = ROOT.lookupType("PacketHeader");
@@ -288,6 +293,5 @@ module.exports = {
     let payload = DownstreamPayload.decode(decrypted);
 
     let rr = RegisterResponse.decode(payload.payloadData);
-    console.log(rr);
   },
 };

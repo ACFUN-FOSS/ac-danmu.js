@@ -66,13 +66,18 @@ module.exports =
             "CommonActionSignalGift"
           );
           element.payload.forEach((e) => {
-            client.emit("gift", CommonActionSignalGift.decode(e));
+            let giftDecode = CommonActionSignalGift.decode(e);
+            giftDecode.value  = giftDecode.value.toNumber()
+            client.emit("gift", giftDecode);
           });
           break;
         case "CommonActionSignalRichText":
           break;
         default:
-          console.log("unknow action signal type" + element.signalType);
+          const type = ROOT.lookupType(
+            element.signalType
+          );
+          console.log(type)
           break;
       }
     });

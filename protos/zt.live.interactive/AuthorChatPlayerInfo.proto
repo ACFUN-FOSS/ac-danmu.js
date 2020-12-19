@@ -1,13 +1,11 @@
 ﻿syntax = "proto3";
 
-option go_package = ".;acproto";
-
 package AcFunDanmu;
 
 import "ZtLiveUserInfo.proto";
 
 message AuthorChatPlayerInfo {
-	ZtLiveUserInfo user = 1;
-	string b = 2;
-	bool c = 3;
+	ZtLiveUserInfo player = 1;
+	string liveId = 2;
+	bool enableJumpPeerLiveRoom = 3;
 }

@@ -15,4 +15,14 @@ AcClient("13146389").then((ac_client) => {
         //收到的弹幕
         console.log(danmaku);
     });
+
+    ac_client.on("like", (like) => {
+        //收到的zan
+        console.log(like);
+    });
+
+    ac_client.on("gift", (gift) => {
+        //收到的zan
+        console.log(gift);
+    });
 });

@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-option go_package = ".;acproto";
-
 package AcFunDanmu;
 
 import "TokenInfo.proto";
@@ -24,7 +22,7 @@ message PacketHeader {
         kDirUpstream = 0;
         kDirDownstream = 1;
         kDirMask = 1;
-    }U
+    }
     enum EncodingType {
         kEncodingNone = 0;
         kEncodingLz4 = 1;
