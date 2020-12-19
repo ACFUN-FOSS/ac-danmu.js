@@ -68,6 +68,8 @@ module.exports =
           element.payload.forEach((e) => {
             let giftDecode = CommonActionSignalGift.decode(e);
             giftDecode.value  = giftDecode.value.toNumber()
+            giftDecode.giftId = giftDecode.giftId.toNumber()
+            giftDecode.giftName =  client.getGiftName(giftDecode.giftId)
             client.emit("gift", giftDecode);
           });
           break;

@@ -6,6 +6,7 @@
 const ProtoBufJs = require("protobufjs");
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
 const tools = require("./tools");
+const _ = require("lodash")
 const commandHandler = require("./handler/command.handler");
 var WebSocketClient = require("websocket").client;
 const proto = require("./proto");
@@ -18,7 +19,8 @@ function AcClient(
   userId,
   liveId,
   availiableTickets,
-  enterRoomAttach
+  enterRoomAttach,
+  giftList
 ) {
   events.EventEmitter.call(this);
   this.did = did;
@@ -37,6 +39,7 @@ function AcClient(
   this.ticketIndex = 0;
   this.retryCount = 0;
   this.timer = null;
+  this.giftList = giftList
 
   this.sendBytes = (buffer, test) => {
     if (this.connection.connected) {
@@ -57,6 +60,11 @@ function AcClient(
       await commandHandler(payload, this);
     }
   };
+
+  this.getGiftName = (giftId)=>{
+    const giftDetail = _.find(this.giftList,{"giftId":giftId})
+    return giftDetail.giftName
+  }
 
   //处理RR
   this.processRegisterResponse = (buffer) => {
@@ -105,10 +113,10 @@ function AcClient(
         this.visitorSt
       );
       this.sendBytes(register, "dr");
-      connection.on("error", function (error) {
+      this.connection.on("error", function (error) {
         console.log("Connection Error: " + error.toString());
       });
-      connection.on("close", () => {
+      this.connection.on("close", () => {
         console.log("fvck!");
         this.seqId = 1;
         setTimeout(() => {
@@ -116,13 +124,13 @@ function AcClient(
           client.connect("wss://link.xiatou.com/");
         }, 1000);
       });
-      connection.on("message", (message) => {
+      this.connection.on("message", (message) => {
         //console.log(message)
         try {
           this.decodeProcess(message.binaryData);
         } catch (error) {
           console.log(error)
-          connection.close()
+          this.connection.close()
         }
         
       });
@@ -135,19 +143,22 @@ function AcClient(
 AcClient.prototype.__proto__ = events.EventEmitter.prototype;
 
 module.exports = async (author_id) => {
-  let did = await tools.getDid();
+  const did = await tools.getDid();
   const login_info = await tools.visitorlogin(this.did);
-  let visitorSt = login_info.visitorSt;
-  let userId = login_info.userId;
-  let acSecurity = login_info.acSecurity;
+  const visitorSt = login_info.visitorSt;
+  const userId = login_info.userId;
+  const acSecurity = login_info.acSecurity;
   const live_info = await tools
     .startPlayInfoByVisitor(did, userId, visitorSt, author_id)
     .catch(() => {
       console.error("直播间可能煤油开播");
     });
-  let availiableTickets = live_info["availableTickets"];
-  let enterRoomAttach = live_info.enterRoomAttach;
-  let liveId = live_info.liveId;
+
+  const availiableTickets = live_info["availableTickets"];
+  const enterRoomAttach = live_info.enterRoomAttach;
+  const liveId = live_info.liveId;
+  const giftListRet = await tools.getGiftInfoList(did, userId, visitorSt, liveId ,author_id)
+  console.log(giftListRet.giftList)
   return new AcClient(
     did,
     visitorSt,
@@ -155,6 +166,7 @@ module.exports = async (author_id) => {
     userId,
     liveId,
     availiableTickets,
-    enterRoomAttach
+    enterRoomAttach,
+    giftListRet.giftList
   );
 };

@@ -9,13 +9,13 @@ const acConfig = require("./config/config.json");
 const acUrl = require("./config/url_set.json");
 const querystring = require("querystring");
 
-let getDid = async () => {
+const getDid = async () => {
   const res = await got(acUrl.acfun_login_main);
   let did_cookie = cookie.parse(res.headers["set-cookie"][1]);
   return did_cookie._did;
 };
 
-let visitorlogin = async (did) => {
+const visitorlogin = async (did) => {
   const res = await got("https://id.app.acfun.cn/rest/app/visitor/login", {
     method: "POST",
     headers: {
@@ -25,7 +25,7 @@ let visitorlogin = async (did) => {
       sid: acConfig.acfun_visitor_sid,
     },
   });
-  let resJson = JSON.parse(res.body);
+  const resJson = JSON.parse(res.body);
   if (resJson.result == 0) {
     return {
       acSecurity: resJson["acSecurity"],
@@ -35,8 +35,8 @@ let visitorlogin = async (did) => {
   }
 };
 
-let startPlayInfoByVisitor = async (did, userId, st, author_id) => {
-  let startPlayUrl =
+const startPlayInfoByVisitor = async (did, userId, st, author_id) => {
+  const startPlayUrl =
     acUrl.acfun_kuaishou_zt_startplay +
     querystring.stringify(
       {
@@ -60,7 +60,7 @@ let startPlayInfoByVisitor = async (did, userId, st, author_id) => {
       pullStreamType: "FLV",
     },
   });
-  let resJson = JSON.parse(res.body);
+  const resJson = JSON.parse(res.body);
   if (resJson.result != 1) {
     throw new Error(resJson.result);
   }
@@ -71,4 +71,39 @@ let startPlayInfoByVisitor = async (did, userId, st, author_id) => {
   };
 };
 
-module.exports = { getDid, visitorlogin, startPlayInfoByVisitor };
+
+const getGiftInfoList  = async (did, userId, st,liveId,authorId)=>{
+  "https://api.kuaishouzt.com/rest/zt/live/web/gift/list?subBiz=mainApp&kpn=ACFUN_APP&kpf=PC_WEB&userId=1000000083833313&did=web_977051926EF8F557&acfun.api.visitor_st=ChRhY2Z1bi5hcGkudmlzaXRvci5zdBJwxHhrwAIYkBDIk-o0fgP6zj5fhjQLacOAu3Hb_JSEO5r5bfEhxSSAONvWKnxMSqOYj1_XXDvoLRSMeejNVIRBqN9uF-JDV9oTUJ7p3_VQmIYgukB1RZWRC7VrMhuTLehyKw8irvAUiKymVqLTa95GcRoS250pzNbFUHCOdT8UKxFVrl1fIiBKhLCDW-gEhmYlLcahjQWUDpEH_JZRyWtKfYnrnVQtvygFMAE"
+  "https://api.kuaishouzt.com/rest/zt/live/web/gift/list?subBiz=mainApp&kpn=ACFUN_APP&userId=1000000083832646&did=web_2054336874990BEA&kpf=PC_WEB&acfun.api.visitor_st=ChRhY2Z1bi5hcGkudmlzaXRvci5zdBJwh5t9fBxM8BOqP4MgPpd5-JyKneZ3wsfc-jYuqPl-Z2TkLoPBp5aZ8UOrDPFU9Nu6Fmego4nA8IT8H6_f3ZjJJj13jZGe42LLrtJjJDN-qwmWfsjKi16I0EnLCq9xl0rxhst337MiQh39h0Vk7Hg5xhoSdLBYz6JTXhfnkG7uvxEyOPCqIiCiDLmlidWAvepOGcWsFQLTqd9wgbpDnLmSyQOEsusDlSgFMAE"
+  const getGiftInfoListURL =
+  acUrl.get_kuaishou_zt_giftlist +
+  querystring.stringify(
+    {
+      subBiz: acConfig.kuaishou.subBiz,
+      kpn: acConfig.kuaishou.kpn,
+      userId: userId,
+      did: did,
+      kpf: acConfig.kuaishou.kpf,
+      [acConfig.acfun_visitorSt_name]: st,
+    },
+    "&",
+    "="
+  );
+  console.log(getGiftInfoListURL)
+  const res = await got(getGiftInfoListURL, {
+    method: "POST",
+    headers: {
+      Referer: acUrl.acfun_live + authorId,
+    },
+    form: {
+      "visitorId":userId,
+      "liveId":liveId
+    },
+  });
+  const resJson = JSON.parse(res.body);
+  if (resJson.result != 1) {
+    throw new Error(resJson.result);
+  }
+  return resJson.data;
+}
+module.exports = { getDid, visitorlogin, startPlayInfoByVisitor ,getGiftInfoList};
