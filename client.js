@@ -122,16 +122,13 @@ function AcClient(
       this.connection.on("close", () => {
         console.log("fvck!");
         this.seqId = 1;
-        setTimeout(() => {
-          console.log("连接失败，正在重试");
-          client.connect("wss://link.xiatou.com/");
-        }, 1000);
+        this.emit("error")
       });
       this.connection.on("message", async (message) => {
         //console.log(message)
         try {
           if(await this.decodeProcess(message.binaryData)===false){
-            this.connection.close()
+            this.emit("error")
           }
         } catch (error) {
           console.log(error)
