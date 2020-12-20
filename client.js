@@ -55,7 +55,9 @@ function AcClient(
     if (header.encryptionMode == 1) this.processRegisterResponse(buffer);
     else {
       let decrypted = proto.decrypt(buffer, this.sessionKey);
-
+      if(!decrypted){
+        return false
+      }
       let payload = DownstreamPayload.decode(decrypted);
       //console.log(payload)
       await commandHandler(payload, this);
@@ -125,10 +127,12 @@ function AcClient(
           client.connect("wss://link.xiatou.com/");
         }, 1000);
       });
-      this.connection.on("message", (message) => {
+      this.connection.on("message", async (message) => {
         //console.log(message)
         try {
-          this.decodeProcess(message.binaryData);
+          if(await this.decodeProcess(message.binaryData)===false){
+            this.connection.close()
+          }
         } catch (error) {
           console.log(error)
           this.connection.close()

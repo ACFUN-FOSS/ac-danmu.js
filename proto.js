@@ -163,8 +163,11 @@ module.exports = {
       let headersize = buffer.readInt32BE(4);
       let keyBuffer = Buffer.from(key, "base64");
       let ivBuffer = buffer.slice(12 + headersize, 28 + headersize);
+      if(ivBuffer.length!=16){
+        return false
+      }
       let bodyBuffer = buffer.slice(28 + headersize);
-      let decipher = crypto.createDecipheriv("AES-128-CBC", keyBuffer, ivBuffer);
+      let decipher = crypto.createDecipheriv("AES-128-CBC", keyBuffer, ivBuffer)
       return Buffer.concat([decipher.update(bodyBuffer), decipher.final()]);
     } catch (error) {
       console.log(error)
