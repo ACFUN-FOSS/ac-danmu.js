@@ -122,13 +122,13 @@ function AcClient(
       this.connection.on("close", () => {
         console.log("fvck!");
         this.seqId = 1;
-        this.emit("error")
+        this.emit("decode-error")
       });
       this.connection.on("message", async (message) => {
         //console.log(message)
         try {
           if(await this.decodeProcess(message.binaryData)===false){
-            this.emit("error")
+            this.emit("decode-error")
           }
         } catch (error) {
           console.log(error)
