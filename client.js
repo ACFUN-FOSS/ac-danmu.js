@@ -11,6 +11,7 @@ const commandHandler = require("./handler/command.handler");
 var WebSocketClient = require("websocket").client;
 const proto = require("./proto");
 var events = require("events");
+const { resolve } = require("path");
 
 function AcClient(
   did,
@@ -63,7 +64,7 @@ function AcClient(
 
   this.getGiftName = (giftId) => {
     const giftDetail = _.find(this.giftList, { "giftId": giftId })
-    return giftDetail.giftName
+    return giftDetail
   }
 
   //处理RR
@@ -138,6 +139,7 @@ function AcClient(
 
     client.connect("wss://link.xiatou.com/");
   };
+
 }
 
 AcClient.prototype.__proto__ = events.EventEmitter.prototype;
@@ -150,15 +152,14 @@ module.exports = async (author_id) => {
   const acSecurity = login_info.acSecurity;
   const live_info = await tools
     .startPlayInfoByVisitor(did, userId, visitorSt, author_id)
-    .catch(() => {
-      console.error("直播间可能煤油开播");
+    .catch((err) => {
+      console.log("直播间可能煤油开播");
     });
-
+   if(!live_info) return
   const availiableTickets = live_info["availableTickets"];
   const enterRoomAttach = live_info.enterRoomAttach;
   const liveId = live_info.liveId;
   const giftListRet = await tools.getGiftInfoList(did, userId, visitorSt, liveId, author_id)
-  console.log(giftListRet.giftList)
   return new AcClient(
     did,
     visitorSt,

@@ -1,7 +1,7 @@
 const AcClient = require("../client.js")
 
 //使用init(主播房间号)初始化客户端
-AcClient("26055450").then((ac_client) => {
+AcClient("156843").then((ac_client) => {
     //启动websocket连接npm
     ac_client.wsStart();
     ac_client.on("enter", () => {

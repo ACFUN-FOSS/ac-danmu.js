@@ -73,9 +73,7 @@ const startPlayInfoByVisitor = async (did, userId, st, author_id) => {
 
 
 const getGiftInfoList  = async (did, userId, st,liveId,authorId)=>{
-  "https://api.kuaishouzt.com/rest/zt/live/web/gift/list?subBiz=mainApp&kpn=ACFUN_APP&kpf=PC_WEB&userId=1000000083833313&did=web_977051926EF8F557&acfun.api.visitor_st=ChRhY2Z1bi5hcGkudmlzaXRvci5zdBJwxHhrwAIYkBDIk-o0fgP6zj5fhjQLacOAu3Hb_JSEO5r5bfEhxSSAONvWKnxMSqOYj1_XXDvoLRSMeejNVIRBqN9uF-JDV9oTUJ7p3_VQmIYgukB1RZWRC7VrMhuTLehyKw8irvAUiKymVqLTa95GcRoS250pzNbFUHCOdT8UKxFVrl1fIiBKhLCDW-gEhmYlLcahjQWUDpEH_JZRyWtKfYnrnVQtvygFMAE"
-  "https://api.kuaishouzt.com/rest/zt/live/web/gift/list?subBiz=mainApp&kpn=ACFUN_APP&userId=1000000083832646&did=web_2054336874990BEA&kpf=PC_WEB&acfun.api.visitor_st=ChRhY2Z1bi5hcGkudmlzaXRvci5zdBJwh5t9fBxM8BOqP4MgPpd5-JyKneZ3wsfc-jYuqPl-Z2TkLoPBp5aZ8UOrDPFU9Nu6Fmego4nA8IT8H6_f3ZjJJj13jZGe42LLrtJjJDN-qwmWfsjKi16I0EnLCq9xl0rxhst337MiQh39h0Vk7Hg5xhoSdLBYz6JTXhfnkG7uvxEyOPCqIiCiDLmlidWAvepOGcWsFQLTqd9wgbpDnLmSyQOEsusDlSgFMAE"
-  const getGiftInfoListURL =
+ const getGiftInfoListURL =
   acUrl.get_kuaishou_zt_giftlist +
   querystring.stringify(
     {
@@ -89,7 +87,6 @@ const getGiftInfoList  = async (did, userId, st,liveId,authorId)=>{
     "&",
     "="
   );
-  console.log(getGiftInfoListURL)
   const res = await got(getGiftInfoListURL, {
     method: "POST",
     headers: {

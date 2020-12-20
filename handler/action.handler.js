@@ -67,17 +67,20 @@ module.exports =
           );
           element.payload.forEach((e) => {
             let giftDecode = CommonActionSignalGift.decode(e);
-            giftDecode.value  = giftDecode.value.toNumber()
+            giftDecode.value = giftDecode.value.toNumber()
             giftDecode.giftId = giftDecode.giftId.toNumber()
-            giftDecode.giftName =  client.getGiftName(giftDecode.giftId)
+            const { giftName, webpPicList, pngPicList } = client.getGiftName(giftDecode.giftId)
+            giftDecode.giftName = giftName
+            giftDecode.webpPicURL = webpPicList[0].url
+            giftDecode.pngPicURL = pngPicList[0].url
             client.emit("gift", giftDecode);
           });
           break;
         case "AcfunActionSignalJoinClub":
           let joinClub = ROOT.lookupType(
             "AcfunActionSignalJoinClub"
-             );
-            client.emit("join-club", joinClub);
+          );
+          client.emit("join-club", joinClub);
           break;
         default:
           // const type = ROOT.lookupType(
