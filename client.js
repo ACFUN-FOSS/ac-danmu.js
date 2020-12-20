@@ -54,15 +54,15 @@ function AcClient(
     if (header.encryptionMode == 1) this.processRegisterResponse(buffer);
     else {
       let decrypted = proto.decrypt(buffer, this.sessionKey);
-     
+
       let payload = DownstreamPayload.decode(decrypted);
       //console.log(payload)
       await commandHandler(payload, this);
     }
   };
 
-  this.getGiftName = (giftId)=>{
-    const giftDetail = _.find(this.giftList,{"giftId":giftId})
+  this.getGiftName = (giftId) => {
+    const giftDetail = _.find(this.giftList, { "giftId": giftId })
     return giftDetail.giftName
   }
 
@@ -132,7 +132,7 @@ function AcClient(
           console.log(error)
           this.connection.close()
         }
-        
+
       });
     });
 
@@ -157,7 +157,7 @@ module.exports = async (author_id) => {
   const availiableTickets = live_info["availableTickets"];
   const enterRoomAttach = live_info.enterRoomAttach;
   const liveId = live_info.liveId;
-  const giftListRet = await tools.getGiftInfoList(did, userId, visitorSt, liveId ,author_id)
+  const giftListRet = await tools.getGiftInfoList(did, userId, visitorSt, liveId, author_id)
   console.log(giftListRet.giftList)
   return new AcClient(
     did,
