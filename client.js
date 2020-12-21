@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-09-12 16:54:29
- * @LastEditors: kanoyami
- * @LastEditTime: 2020-09-16 02:27:21
+ * @LastEditors: kongzenwang
+ * @LastEditTime: 2020-12-21 16:31:49
  */
 const ProtoBufJs = require("protobufjs");
 const ROOT = ProtoBufJs.Root.fromJSON(require("./protos.bundle.json"));
@@ -46,7 +46,7 @@ function AcClient(
     if (this.connection.connected) {
       this.connection.sendBytes(buffer);
       this.seqId++;
-    } else console.log("Ws closed");
+    } else console.log("ws->reconnect");
   };
   //确定返回类型
   this.decodeProcess = async (buffer) => {
@@ -106,7 +106,7 @@ function AcClient(
     });
 
     client.on("connect", (connection) => {
-      console.log("WebSocket Client Connected");
+      console.log("WebSocket Client to Kuaishou Connected");
       this.connection = connection;
       let register = proto.genRegisterPack(
         this.seqId,
@@ -120,7 +120,7 @@ function AcClient(
         console.log("Connection Error: " + error.toString());
       });
       this.connection.on("close", () => {
-        console.log("fvck!");
+        console.warn("ws connection closed.");
         this.seqId = 1;
         this.emit("decode-error")
       });
