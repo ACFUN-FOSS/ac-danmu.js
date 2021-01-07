@@ -4,5 +4,6 @@
   "acfun_kuaishou_zt_startplay": "https://api.kuaishouzt.com/rest/zt/live/web/startPlay?",
   "acfun_live": "https://live.acfun.cn/live/",
   "wss_host": "wss://link.xiatou.com/",
-  "get_kuaishou_zt_giftlist": "https://api.kuaishouzt.com/rest/zt/live/web/gift/list?"
+  "get_kuaishou_zt_giftlist": "https://api.kuaishouzt.com/rest/zt/live/web/gift/list?",
+  "acfunSignInURL" : "https://id.app.acfun.cn/rest/web/login/signin"
 }

@@ -8,7 +8,7 @@
 
 ## 简介
 
-* ac-danmu.js是[orzogc/acfundanmu](https://github[.com/orzogc/acfundanmu)的Nodejs实现，这两个项目的诞生都离不开[wpscott/AcFunDanmaku](https://github.com/wpscott/AcFunDanmaku/tree/master/AcFunDanmu)提供的实现思路和配置文件，请给他们点Star
+* ac-danmu.js是[orzogc/acfundanmu](https://github.com/orzogc/acfundanmu)的Nodejs实现，这两个项目的诞生都离不开[wpscott/AcFunDanmaku](https://github.com/wpscott/AcFunDanmaku/tree/master/AcFunDanmu)提供的实现思路和配置文件，请给他们点Star
 
 ## ac-danmu.js是一个用于获取acfun直播弹幕的服务端js组件
 
@@ -26,7 +26,10 @@
 const AcClient = require("ac-danmu")
 
 //使用init(主播房间号)初始化客户端
-AcClient("8500263").then((ac_client) => {
+AcClient("8500263").then((ac_client,{
+    login:ture ,//default false
+    userinfo: {username:"something",password:"something"} || [{username:"something",password:"something"}]//输入多组用户，每次重连会随机一个
+}) => {
     //启动websocket连接
     ac_client.wsStart();
     ac_client.on("enter", () => {

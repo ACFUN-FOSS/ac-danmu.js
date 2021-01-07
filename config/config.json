@@ -5,6 +5,8 @@
     "client_live_sdk_version": "kwai-acfun-live-link",
     "acfun_visitor_sid": "acfun.api.visitor",
     "acfun_visitorSt_name": "acfun.api.visitor_st",
+    "acfun_userSt_name":"acfun.midground.api_st",
+    "acfun_login_sid":"acfun.midground.api",
     "safety_id_content": "{\"platform\":5,\"app_version\":\"2.0.32\",\"device_id\":\"null\",\"userId\":\"%d\"}",
     "kuaishou": {
         "subBiz": "mainApp",
