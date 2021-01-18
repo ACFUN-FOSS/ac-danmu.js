@@ -152,20 +152,23 @@ module.exports = async (author_id, option = { login: false }) => {
       throw new Error("must pass userinfo by using login mode")
     }
     const login_info = await tools.userlogin(did, option.userinfo).catch((err) => {
-      console.log(err)
-    });;
+      console.log("error:"+err.message)
+      return
+    });
     const visitorSt = login_info.visitorSt;
     const userId = login_info.userId;
     const acSecurity = login_info.acSecurity;
     const live_info = await tools.startPlayInfoByLogin(did, userId, visitorSt, author_id).catch((err) => {
-      console.log(err)
+      console.log("error:"+err.message)
+      return
     });
     if (!live_info) return
     const availiableTickets = live_info["availableTickets"];
     const enterRoomAttach = live_info.enterRoomAttach;
     const liveId = live_info.liveId;
     const giftListRet = await tools.getGiftInfoList(did, userId, visitorSt, liveId, author_id, true).catch((err) => {
-      console.log(err)
+      console.log("error:"+err.message)
+      return
     });
     return new AcClient(
       did,
@@ -179,7 +182,8 @@ module.exports = async (author_id, option = { login: false }) => {
     );
   } else {
     const login_info = await tools.visitorlogin(did).catch((err) => {
-      console.log(err)
+      console.log("error:"+err.message)
+      return
     });
     const visitorSt = login_info.visitorSt;
     const userId = login_info.userId;
@@ -187,14 +191,16 @@ module.exports = async (author_id, option = { login: false }) => {
     const live_info = await tools
       .startPlayInfoByVisitor(did, userId, visitorSt, author_id)
       .catch((err) => {
-        console.log("直播间可能煤油开播");
+        console.log("error:"+err.message)
+        return
       });
     if (!live_info) return
     const availiableTickets = live_info["availableTickets"];
     const enterRoomAttach = live_info.enterRoomAttach;
     const liveId = live_info.liveId;
     const giftListRet = await tools.getGiftInfoList(did, userId, visitorSt, liveId, author_id).catch((err) => {
-      console.log(err)
+      console.log("error:"+err.message)
+      return
     });
     return new AcClient(
       did,
