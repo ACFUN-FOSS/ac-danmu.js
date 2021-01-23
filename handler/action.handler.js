@@ -77,10 +77,13 @@ module.exports =
           });
           break;
         case "AcfunActionSignalJoinClub":
-          let joinClub = ROOT.lookupType(
+          let AcfunActionSignalJoinClub = ROOT.lookupType(
             "AcfunActionSignalJoinClub"
           );
-          client.emit("join-club", joinClub);
+          element.payload.forEach((e) => {
+            client.emit("join-club", AcfunActionSignalJoinClub.decode(e));
+          });
+         
           break;
         default:
           // const type = ROOT.lookupType(
